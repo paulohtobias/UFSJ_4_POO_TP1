@@ -62,13 +62,25 @@ public class Personagem {
         this.proximoItem = null;
     }
 
-    public Boolean Pegar(){
+    public Item Pegar(){
         if( (this.itens.size() >= this.getMaxItens()) || (this.getProximoItem() == null) ){
-            return false;
+            return null;
         }
         
-        this.itens.add((Item) this.getProximoItem());
-        return true;
+        this.itens.add( (Item)this.getProximoItem() );
+        Item item = this.getProximoItem();
+        this.proximoItem = null;
+        return item;
+    }
+    
+    public Boolean Largar(String str_item){
+        for(Item i: this.itens){
+            if(str_item == i.getTipo()){
+                this.itens.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
     
     public void Sair(){

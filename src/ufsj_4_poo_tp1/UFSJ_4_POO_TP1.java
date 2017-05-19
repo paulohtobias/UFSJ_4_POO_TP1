@@ -9,6 +9,7 @@ import Item.Item;
 import Mapa.Sala;
 import Mapa.Mapa;
 import Mapa.Porta;
+import Personagem.Comando;
 import Personagem.Jogador;
 import java.util.Scanner;
 
@@ -27,32 +28,17 @@ public class UFSJ_4_POO_TP1 {
         Mapa mapa = new Mapa();
         Sala salaAtual;
         
-        String nome = scan.next();
+        System.out.print("Nome do jogador: ");
+        String nome = scan.nextLine();
         Jogador jogador = new Jogador(nome);
-        
+
         String acao;
         while(true){ //loop principal
+            System.out.printf("%s> ", jogador.getId());
             acao = scan.nextLine();
             salaAtual = mapa.getSala(jogador.getSalaAtual());
-            
-            if(acao.equals("view")){
-                salaAtual.Listar();
-            }
-            
-            if(acao.startsWith("moveTo")){
-                Item item = salaAtual.getItem(acao.substring(7));
-                if(item != null){
-                    jogador.Mover(item);
-                    System.out.println("moveu para " + jogador.getProximoItem().toString());
-                }else{
-                    Porta porta = salaAtual.getPorta(acao.substring(7));
-                    if(porta != null){
-                        jogador.Mover(porta);
-                        System.out.println("moveu para " + jogador.getProximaPorta().toString());
-                    }
-                }
-            }
+
+            Comando.getComando(salaAtual, jogador, acao);
         }
     }
-
 }

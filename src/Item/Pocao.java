@@ -10,5 +10,7 @@ package Item;
  * @author paulo
  */
 public class Pocao extends Item {
-    
+    public String getTipo(){
+        return "potion";
+    }
 }

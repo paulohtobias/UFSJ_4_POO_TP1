@@ -9,7 +9,6 @@ import Item.Diamante;
 import Item.Item;
 import Item.Ouro;
 import Item.Pocao;
-import Personagem.Jogador;
 import Personagem.Troll;
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,7 +25,6 @@ public class Sala {
     
     private ArrayList<Item> itens;
     private ArrayList<Troll> trolls;
-    //private Jogador jogador;
     
     public Sala(int id, int salaA){
         this.portaA = new Porta(this.id, salaA);
@@ -34,35 +32,31 @@ public class Sala {
         this.setTrolls();
     }
     public Sala(int id, int salaA, int salaB){
-        this.portaA = new Porta(this.id, salaA);
+        this(id, salaA);
         this.portaB = new Porta(this.id, salaB);
-        this.setItens();
-        this.setTrolls();
     }
     public Sala(int id, int salaA, int salaB, int salaC){
-        this.portaA = new Porta(this.id, salaA);
-        this.portaB = new Porta(this.id, salaB);
-        this.portaB = new Porta(this.id, salaC);
-        this.setItens();
-        this.setTrolls();
+        this(id, salaA, salaB);
+        this.portaC = new Porta(this.id, salaC);
     }
     
     public Item getItem(String str_item){
+        //str_item = str_item.toLowerCase();
         for(Item item : this.itens){
-            if(item.getClass().toString().indexOf(str_item) != -1){
+            if(item.getTipo().equals(str_item)){
                 return item;
             }
         }
         return null;
     }
     public Porta getPorta(String str_porta){
-        if(str_porta.equals("A door")){
+        if(str_porta.equals("a door")){
             return this.portaA;
         }
-        if(str_porta.equals("B door")){
+        if(str_porta.equals("b door")){
             return this.portaB;
         }
-        if(str_porta.equals("C door")){
+        if(str_porta.equals("c door")){
             return this.portaC;
         }
         return null;
@@ -92,6 +86,10 @@ public class Sala {
         }
     }
     
+    public void removerItem(Item item){
+        this.itens.remove(item);
+    }
+    
     private void setTrolls(){
         this.trolls = new ArrayList<Troll>();
         
@@ -118,7 +116,7 @@ public class Sala {
         }
         System.out.println();
         
-        System.out.println("  Itens:");
+        System.out.printf("  Itens: %d\n", this.itens.size());
         for(Item item : this.itens){
             System.out.print("    ");
             System.out.println(item.getClass().getTypeName());

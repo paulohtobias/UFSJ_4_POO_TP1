@@ -9,4 +9,8 @@ package Item;
  *
  * @author paulo
  */
-public class Item {}
+public class Item {
+    public String getTipo(){
+        return "";
+    }
+}

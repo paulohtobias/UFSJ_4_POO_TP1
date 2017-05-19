@@ -49,4 +49,8 @@ public class Porta {
         this.estado = estado;
     }
     
+    public String getTipo(){
+        return "door";
+    }
+    
 }

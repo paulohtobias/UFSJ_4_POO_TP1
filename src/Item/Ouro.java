@@ -9,4 +9,8 @@ package Item;
  *
  * @author paulo
  */
-public class Ouro extends Moeda {}
+public class Ouro extends Moeda {
+    public String getTipo(){
+        return "gold";
+    }
+}
