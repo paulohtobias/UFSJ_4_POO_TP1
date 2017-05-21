@@ -5,6 +5,7 @@
  */
 package Personagem;
 
+import Item.Chave;
 import Item.Item;
 import Mapa.Porta;
 import java.util.ArrayList;
@@ -85,15 +86,30 @@ public class Personagem {
     
     public Boolean Sair(){
         try{
+            //A porta pode ser null.
             if(this.getProximaPorta().getEstado() != Porta.Porta_Estado.TRANCADA){
-                this.salaAtual = this.getProximaPorta().getSala2(); //A porta pode ser null.
+                this.salaAtual = this.getProximaPorta().getSala2();
                 this.proximaPorta = null;
                 this.proximoItem = null;
                 return true;
             }
             //Se chegar até aqui, significa que a porta está trancada.
+            if(this instanceof Troll){
+                //Trolls não podem abrir portas trancadas.
+                return false;
+            }
+            
             //Portanto, verifica se o personagem tem uma chave para abrí-la.
-            System.out.println("PORTA TRNACADA");
+            int index = 0;
+            for(Item item: this.itens){
+                if((item instanceof Chave) && ((Chave)item).Usar(this.getProximaPorta()) == true){
+                    //O jogador possuía a chave que destranca a porta.
+                    //Essa chave será usada.
+                    this.itens.remove(index);
+                    return this.Sair();
+                }
+                index++;
+            }
             return false;
         }catch(Exception e){
             return false;
@@ -101,7 +117,6 @@ public class Personagem {
     }
     
     public Boolean Usar(String str_item){
-        
         return false;
     }
 }

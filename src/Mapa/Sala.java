@@ -70,10 +70,10 @@ public class Sala {
                     this.portaA.setEstado(Porta_Estado.TRANCADA);
                     break;
                 case "B":
-                    this.portaA.setEstado(Porta_Estado.TRANCADA);
+                    this.portaB.setEstado(Porta_Estado.TRANCADA);
                     break;
                 case "C":
-                    this.portaA.setEstado(Porta_Estado.TRANCADA);
+                    this.portaC.setEstado(Porta_Estado.TRANCADA);
                     break;
             }
         }

@@ -30,13 +30,14 @@ public class Chave extends Item {
         return sala2;
     }
     
-    public Boolean Usar(Sala sala, String str_porta){
-        Porta porta = sala.getPorta(str_porta);
+    public Boolean Usar(Porta porta){
         if(porta != null){
             if(this.sala1 == porta.getSala1() && this.sala2 == porta.getSala2()){
+                porta.setEstado(Porta_Estado.ABERTA);
                 return true;
             }
             if(this.sala1 == porta.getSala2() && this.sala2 == porta.getSala1()){
+                porta.setEstado(Porta_Estado.ABERTA);
                 return true;
             }
         }
