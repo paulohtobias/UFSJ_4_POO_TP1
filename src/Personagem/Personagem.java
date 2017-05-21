@@ -68,7 +68,7 @@ public class Personagem {
             return null;
         }
         
-        this.itens.add( (Item)this.getProximoItem() );
+        this.itens.add(this.getProximoItem());
         Item item = this.getProximoItem();
         this.proximoItem = null;
         return item;
@@ -85,35 +85,16 @@ public class Personagem {
     }
     
     public Boolean Sair(){
-        try{
-            //A porta pode ser null.
-            if(this.getProximaPorta().getEstado() != Porta.Porta_Estado.TRANCADA){
-                this.salaAtual = this.getProximaPorta().getSala2();
-                this.proximaPorta = null;
-                this.proximoItem = null;
-                return true;
-            }
-            //Se chegar até aqui, significa que a porta está trancada.
-            if(this instanceof Troll){
-                //Trolls não podem abrir portas trancadas.
-                return false;
-            }
-            
-            //Portanto, verifica se o personagem tem uma chave para abrí-la.
-            int index = 0;
-            for(Item item: this.itens){
-                if((item instanceof Chave) && ((Chave)item).Usar(this.getProximaPorta()) == true){
-                    //O jogador possuía a chave que destranca a porta.
-                    //Essa chave será usada.
-                    this.itens.remove(index);
-                    return this.Sair();
-                }
-                index++;
-            }
-            return false;
-        }catch(Exception e){
+        if(this.getProximaPorta() == null){
             return false;
         }
+        if(this.getProximaPorta().getEstado() == Porta.Porta_Estado.ABERTA){
+            this.salaAtual = this.getProximaPorta().getSala2();
+            this.proximaPorta = null;
+            this.proximoItem = null;
+            return true;
+        }
+        return false;
     }
     
     public Boolean Usar(String str_item){

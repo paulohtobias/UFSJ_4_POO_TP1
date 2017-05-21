@@ -20,6 +20,10 @@ public class Comando {
         String[] comandos = comando.trim().split("\\s+", 2);
         
         String acao = comandos[0].toLowerCase();
+        String sujeito = null;
+        if(comandos.length > 1){
+            sujeito = comandos[1].toLowerCase();
+        }
         
         //COMANDOS SIMPLES
         if(acao.equals("view")){
@@ -30,6 +34,9 @@ public class Comando {
         Boolean saida = (personagem instanceof Jogador);
         
         if(acao.equals("pickup")){
+            if(sujeito != null){
+                getComando(salaAtual, personagem, "moveto " + sujeito);
+            }
             Item pegado = personagem.Pegar();
             if(pegado != null){
                 salaAtual.removerItem(pegado);
@@ -55,10 +62,7 @@ public class Comando {
         }
         
         //COMANDOS COMPOSTOS        
-        String sujeito;
-        if(comandos.length > 1){
-            sujeito = comandos[1].toLowerCase();
-        }else{
+        if(sujeito == null){
             return;
         }
         
