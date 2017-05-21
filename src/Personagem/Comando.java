@@ -50,6 +50,10 @@ public class Comando {
             }
         }
         
+        if(acao.equals("quit")){
+            System.exit(0);
+        }
+        
         //COMANDOS COMPOSTOS        
         String sujeito;
         if(comandos.length > 1){
@@ -65,7 +69,7 @@ public class Comando {
             if(item != null){
                 personagem.Mover(item);
                 if(saida == true){
-                    System.out.println("moveu para " + personagem.getProximoItem().getTipo());
+                    System.out.println("moveu para " + personagem.getProximoItem().toString());
                 }
                 return;
             }

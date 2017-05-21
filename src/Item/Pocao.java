@@ -5,12 +5,22 @@
  */
 package Item;
 
+import Mapa.Porta;
+
 /**
  *
  * @author paulo
  */
 public class Pocao extends Item {
-    public String getTipo(){
+    public Boolean Usar(Porta porta){
+        if(porta.getEstado() == Porta.Porta_Estado.ABERTA){
+            porta.setEstado(Porta.Porta_Estado.FECHADA);
+            return true;
+        }
+        return false;
+    }
+    
+    public String toString(){
         return "potion";
     }
 }

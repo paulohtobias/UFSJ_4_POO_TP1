@@ -10,7 +10,11 @@ package Item;
  * @author paulo
  */
 public class Item {
-    public String getTipo(){
-        return "";
+    public Boolean Usar(){
+        return false;
+    }
+    
+    public String toString(){
+        return "item";
     }
 }

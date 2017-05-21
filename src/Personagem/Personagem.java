@@ -75,7 +75,7 @@ public class Personagem {
     
     public Boolean Largar(String str_item){
         for(Item i: this.itens){
-            if(str_item.equals(i.getTipo()) == true){
+            if(str_item.equals(i.toString()) == true){
                 this.itens.remove(i);
                 return true;
             }
@@ -98,5 +98,10 @@ public class Personagem {
         }catch(Exception e){
             return false;
         }
+    }
+    
+    public Boolean Usar(String str_item){
+        
+        return false;
     }
 }

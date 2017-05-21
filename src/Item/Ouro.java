@@ -10,7 +10,7 @@ package Item;
  * @author paulo
  */
 public class Ouro extends Moeda {
-    public String getTipo(){
-        return "gold";
+    public String toString(){
+        return String.format("gold: %d", this.getQuantidade());
     }
 }

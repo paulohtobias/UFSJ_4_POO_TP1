@@ -5,6 +5,7 @@
  */
 package Mapa;
 
+import Item.Chave;
 import Item.Diamante;
 import Item.Item;
 import Item.Ouro;
@@ -30,6 +31,7 @@ public class Sala {
     public Sala(int id, int salaA){
         this.id = id;
         this.portaA = new Porta(this.id, salaA);
+        this.itens = new ArrayList<>();
         this.setItens();
         this.setTrolls();
     }
@@ -45,10 +47,12 @@ public class Sala {
         int id_size = str.indexOf(':');
         this.id = Integer.parseInt(str.substring(0, id_size));
         
+        this.itens = new ArrayList<Item>();
+        
         //Criando as portas.
         int salas_tamI = str.indexOf('(', id_size) + 1;
         int salas_tamF = str.indexOf(')', salas_tamI);
-        String[] salas = str.substring(salas_tamI, salas_tamF).split("(\\D)+");
+        String[] salas = str.substring(salas_tamI, salas_tamF).split(",");
         
         this.portaA = new Porta(this.id, Integer.parseInt(salas[0]));
         try{
@@ -56,16 +60,8 @@ public class Sala {
             this.portaC = new Porta(this.id, Integer.parseInt(salas[2]));
         }catch(Exception e){}
         
-        //Verificando se há chaves na sala.
-        int chaves_tamI = str.indexOf('(', salas_tamF) + 1;
-        int chaves_tamF = str.indexOf(')', chaves_tamI);
-        String[] chaves = str.substring(chaves_tamI, chaves_tamF).split("(\\D)+");
-        try{
-            //TO-DO: Criar chaves aqui
-        }catch(Exception e){}
-        
         //Identificando as portas trancadas.
-        int trancadas_tamI = str.indexOf('(', chaves_tamF) + 1;
+        int trancadas_tamI = str.indexOf('(', salas_tamF) + 1;
         int trancadas_tamF = str.indexOf(')', trancadas_tamI);
         String[] trancadas = str.substring(trancadas_tamI, trancadas_tamF).split(",");
         for(String tranca: trancadas){
@@ -82,6 +78,17 @@ public class Sala {
             }
         }
         
+        //Verificando se há chaves na sala.
+        int chaves_tamI = str.indexOf('(', trancadas_tamF) + 1;
+        int chaves_tamF = str.indexOf(')', chaves_tamI);
+        String[] chaves = str.substring(chaves_tamI, chaves_tamF).split(",");
+        for(String chave: chaves){
+            String[] chave_salas = chave.split("-");
+            int chave_sala1 = Integer.parseInt(chave_salas[0]);
+            int chave_sala2 = Integer.parseInt(chave_salas[1]);
+            this.itens.add(new Chave(chave_sala1, chave_sala2));
+        }
+        
         //Preenchendo itens e trolls.
         this.setItens();
         this.setTrolls();
@@ -94,7 +101,7 @@ public class Sala {
     public Item getItem(String str_item){
         //str_item = str_item.toLowerCase();
         for(Item item : this.itens){
-            if(item.getTipo().equals(str_item)){
+            if(item.toString().startsWith(str_item)){
                 return item;
             }
         }
@@ -114,8 +121,6 @@ public class Sala {
     }
     
     private void setItens(){
-        this.itens = new ArrayList<Item>();
-        
         Random rand = new Random();
         int maxItens = 5;
         int qtdItens = rand.nextInt(maxItens + 1);
@@ -132,6 +137,9 @@ public class Sala {
                     break;
                 case 2: //Poção
                     this.itens.add(new Pocao());
+                    break;
+                case 3: //Machado
+                    //this.itens.add(new Machado());
                     break;
             }
         }
@@ -170,7 +178,8 @@ public class Sala {
         System.out.printf("  Itens: %d\n", this.itens.size());
         for(Item item : this.itens){
             System.out.print("    ");
-            System.out.println(item.getClass().getTypeName());
+            //System.out.println(item.getClass().getTypeName());
+            System.out.println(item);
         }
         
         System.out.println("  Trolls:");

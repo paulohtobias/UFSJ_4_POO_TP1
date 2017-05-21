@@ -30,4 +30,8 @@ public class Moeda extends Item {
     public void zerar(){
         this.quantidade = 0;
     }
+    
+    public String toString(){
+        return String.format("currency: %d", this.quantidade);
+    }
 }

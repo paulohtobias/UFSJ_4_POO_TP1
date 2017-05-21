@@ -22,8 +22,8 @@ public class UFSJ_4_POO_TP1 {
     /**
      * @param args the command line arguments
      */
-    public static void main2(String[] args){
-        String str = "1: (6,2) (,) (A,B)";
+    public static void main1(String[] args){
+        String str = "1: (6,2) (12-13,7-8) (A,B)";
         int i, j;
         int id_size = str.indexOf(':');
         int id = Integer.parseInt(str.substring(0, id_size));
@@ -34,9 +34,14 @@ public class UFSJ_4_POO_TP1 {
         
         int chaves_tamI = str.indexOf('(', salas_sizeF) + 1;
         int chaves_tamF = str.indexOf(')', chaves_tamI);
-        String[] chaves = str.substring(chaves_tamI, chaves_tamF).split("(\\D)+");
-        for(String s: chaves){
-            System.out.println("<" + s + ">");
+        String[] chaves = str.substring(chaves_tamI, chaves_tamF).split(",");
+        for(String chave: chaves){
+            System.out.println("<" + chave + ">");
+            //String[] chave = s.split("-");
+            for(String s2: chave.split("-")){
+                System.out.print("   <" + s2 + ">");
+            }
+            System.out.println();
         }
         
         //Identificando as portas trancadas.
