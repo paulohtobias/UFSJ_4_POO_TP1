@@ -9,6 +9,7 @@ import Item.Diamante;
 import Item.Item;
 import Item.Ouro;
 import Item.Pocao;
+import Mapa.Porta.Porta_Estado;
 import Personagem.Troll;
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,7 +19,7 @@ import java.util.Random;
  * @author paulo
  */
 public class Sala {
-    int id;
+    private int id;
     private Porta portaA = null;
     private Porta portaB = null;
     private Porta portaC = null;
@@ -27,6 +28,7 @@ public class Sala {
     private ArrayList<Troll> trolls;
     
     public Sala(int id, int salaA){
+        this.id = id;
         this.portaA = new Porta(this.id, salaA);
         this.setItens();
         this.setTrolls();
@@ -38,6 +40,55 @@ public class Sala {
     public Sala(int id, int salaA, int salaB, int salaC){
         this(id, salaA, salaB);
         this.portaC = new Porta(this.id, salaC);
+    }
+    public Sala(String str){
+        int id_size = str.indexOf(':');
+        this.id = Integer.parseInt(str.substring(0, id_size));
+        
+        //Criando as portas.
+        int salas_tamI = str.indexOf('(', id_size) + 1;
+        int salas_tamF = str.indexOf(')', salas_tamI);
+        String[] salas = str.substring(salas_tamI, salas_tamF).split("(\\D)+");
+        
+        this.portaA = new Porta(this.id, Integer.parseInt(salas[0]));
+        try{
+            this.portaB = new Porta(this.id, Integer.parseInt(salas[1]));
+            this.portaC = new Porta(this.id, Integer.parseInt(salas[2]));
+        }catch(Exception e){}
+        
+        //Verificando se há chaves na sala.
+        int chaves_tamI = str.indexOf('(', salas_tamF) + 1;
+        int chaves_tamF = str.indexOf(')', chaves_tamI);
+        String[] chaves = str.substring(chaves_tamI, chaves_tamF).split("(\\D)+");
+        try{
+            //TO-DO: Criar chaves aqui
+        }catch(Exception e){}
+        
+        //Identificando as portas trancadas.
+        int trancadas_tamI = str.indexOf('(', chaves_tamF) + 1;
+        int trancadas_tamF = str.indexOf(')', trancadas_tamI);
+        String[] trancadas = str.substring(trancadas_tamI, trancadas_tamF).split(",");
+        for(String tranca: trancadas){
+            switch(tranca){
+                case "A":
+                    this.portaA.setEstado(Porta_Estado.TRANCADA);
+                    break;
+                case "B":
+                    this.portaA.setEstado(Porta_Estado.TRANCADA);
+                    break;
+                case "C":
+                    this.portaA.setEstado(Porta_Estado.TRANCADA);
+                    break;
+            }
+        }
+        
+        //Preenchendo itens e trolls.
+        this.setItens();
+        this.setTrolls();
+    }
+    
+    public int getId(){
+        return this.id;
     }
     
     public Item getItem(String str_item){

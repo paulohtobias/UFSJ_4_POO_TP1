@@ -19,7 +19,7 @@ public class Personagem {
     private ArrayList<Item> itens;
     private Item proximoItem;
     private Porta proximaPorta;
-    int salaAtual;
+    int salaAtual = 1;
     
     public Personagem(String id, int maxItens){
         this.id = id;
@@ -75,7 +75,7 @@ public class Personagem {
     
     public Boolean Largar(String str_item){
         for(Item i: this.itens){
-            if(str_item == i.getTipo()){
+            if(str_item.equals(i.getTipo()) == true){
                 this.itens.remove(i);
                 return true;
             }
@@ -83,10 +83,20 @@ public class Personagem {
         return false;
     }
     
-    public void Sair(){
-        int proximaSala = this.getProximaPorta().getSala2();
-        this.salaAtual = proximaSala;
-        this.proximaPorta = null;
-        this.proximoItem = null;
+    public Boolean Sair(){
+        try{
+            if(this.getProximaPorta().getEstado() != Porta.Porta_Estado.TRANCADA){
+                this.salaAtual = this.getProximaPorta().getSala2(); //A porta pode ser null.
+                this.proximaPorta = null;
+                this.proximoItem = null;
+                return true;
+            }
+            //Se chegar até aqui, significa que a porta está trancada.
+            //Portanto, verifica se o personagem tem uma chave para abrí-la.
+            System.out.println("PORTA TRNACADA");
+            return false;
+        }catch(Exception e){
+            return false;
+        }
     }
 }

@@ -15,31 +15,43 @@ import Mapa.Sala;
  * @author paulo
  */
 public class Comando {
+    
     static public void getComando(Sala salaAtual, Personagem personagem, String comando){
         String[] comandos = comando.trim().split("\\s+", 2);
         
-        for(String s: comandos){
-            System.out.println(s);
-        }
-        
         String acao = comandos[0].toLowerCase();
-        String sujeito;
         
+        //COMANDOS SIMPLES
         if(acao.equals("view")){
             salaAtual.Listar();
             return;
         }
         
+        Boolean saida = (personagem instanceof Jogador);
+        
         if(acao.equals("pickup")){
             Item pegado = personagem.Pegar();
             if(pegado != null){
                 salaAtual.removerItem(pegado);
-            }else{
-                System.out.printf("Lista cheia.");
+            }else if(saida == true){
+                System.out.println("Lista cheia.");
             }
             return;
         }
         
+        if(acao.equals("exit")){
+            Boolean resultado = personagem.Sair();
+            if(saida == true){
+                if(resultado == true){
+                    System.out.println(personagem.getId() + " se moveu para a sala " + personagem.getSalaAtual());
+                }else{
+                    System.out.println("Nao foi possivel sair da sala");
+                }
+            }
+        }
+        
+        //COMANDOS COMPOSTOS        
+        String sujeito;
         if(comandos.length > 1){
             sujeito = comandos[1].toLowerCase();
         }else{
@@ -52,29 +64,30 @@ public class Comando {
             Porta porta = salaAtual.getPorta(sujeito);
             if(item != null){
                 personagem.Mover(item);
-                System.out.println("moveu para " + personagem.getProximoItem().getTipo());
+                if(saida == true){
+                    System.out.println("moveu para " + personagem.getProximoItem().getTipo());
+                }
                 return;
             }
             if(porta != null){
                 personagem.Mover(porta);
-                System.out.println("moveu para " + sujeito);
+                if(saida == true){
+                    System.out.println("moveu para " + sujeito);
+                }
                 return;
             }
             return;
         }
         
         if(acao.equals("drop")){
-            System.out.println("Lista itens");
-            for(Item asd: personagem.getItens()){
-                System.out.println(asd.getTipo());
+            Boolean resultado = personagem.Largar(sujeito);
+            if(saida == true){
+                if(resultado == true){
+                    System.out.println("Largou " + sujeito);
+                }else{
+                    System.out.println("Não foi possível largar " + sujeito);
+                }
             }
-            return;
-            
-            /*if(personagem.Largar(sujeito) == true){
-                System.out.println("====LARGOU====");
-            }else{
-                System.out.println("==NAO LARGOU==");
-            }*/
         }
     }
 }

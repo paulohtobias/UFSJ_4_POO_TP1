@@ -7,6 +7,8 @@ package Mapa;
 
 import Item.Item;
 import Personagem.Personagem;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 /**
  *
@@ -17,9 +19,28 @@ public class Mapa {
     private final int numSalas = 20;
     
     public Mapa(){
+        this("mapa1.txt");
+    }
+    
+    public Mapa(String arquivo){
         this.salas = new Sala[numSalas];
-        for(int i=0; i<numSalas; i++){
-            this.salas[i] = new Sala(i, i+1);
+        
+        FileReader fr = null;
+        BufferedReader br = null;
+        
+        try{
+            fr = new FileReader(arquivo);
+            br = new BufferedReader(fr);
+            
+            String linha;
+            
+            br = new BufferedReader(new FileReader(arquivo));
+            
+            for(int i=0; i<numSalas && (linha = br.readLine()) != null; i++){
+                this.salas[i] = new Sala(linha);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
     
@@ -28,8 +49,10 @@ public class Mapa {
     }
     
     public Sala getSala(int salaId){
-        if(salaId >=0 && salaId <20){
-            return this.salas[salaId];
+        for(int i=0; i<this.numSalas; i++){
+            if(this.salas[i].getId() == salaId){
+                return this.salas[i];
+            }
         }
         return null;
     }
