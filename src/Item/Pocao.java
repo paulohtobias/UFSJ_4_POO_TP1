@@ -6,6 +6,7 @@
 package Item;
 
 import Mapa.Porta;
+import Mapa.Sala;
 
 /**
  *

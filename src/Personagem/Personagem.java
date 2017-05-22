@@ -8,6 +8,7 @@ package Personagem;
 import Item.Chave;
 import Item.Item;
 import Mapa.Porta;
+import Mapa.Sala;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +21,7 @@ public class Personagem {
     private ArrayList<Item> itens;
     private Item proximoItem;
     private Porta proximaPorta;
-    int salaAtual = 1;
+    private int salaAtual = 1;
     
     public Personagem(String id, int maxItens){
         this.id = id;
@@ -89,7 +90,7 @@ public class Personagem {
             return false;
         }
         if(this.getProximaPorta().getEstado() == Porta.Porta_Estado.ABERTA){
-            this.salaAtual = this.getProximaPorta().getSala2();
+            this.salaAtual = this.getProximaPorta().getSala2(this.salaAtual);
             this.proximaPorta = null;
             this.proximoItem = null;
             return true;
@@ -98,6 +99,10 @@ public class Personagem {
     }
     
     public Boolean Usar(String str_item){
+        return false;
+    }
+    
+    public Boolean Trancar(){
         return false;
     }
 }

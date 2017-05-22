@@ -31,14 +31,16 @@ public class Chave extends Item {
     }
     
     public Boolean Usar(Porta porta){
-        if(porta != null){
-            if(this.sala1 == porta.getSala1() && this.sala2 == porta.getSala2()){
-                porta.setEstado(Porta_Estado.ABERTA);
-                return true;
-            }
-            if(this.sala1 == porta.getSala2() && this.sala2 == porta.getSala1()){
-                porta.setEstado(Porta_Estado.ABERTA);
-                return true;
+        if(porta != null){            
+            if(porta.getEstado() == Porta_Estado.TRANCADA){
+                if(this.sala1 == porta.getSala1(this.sala1) && this.sala2 == porta.getSala2(this.sala1)){
+                    porta.setEstado(Porta_Estado.ABERTA);
+                    return true;
+                }
+                if(this.sala1 == porta.getSala2(this.sala1) && this.sala2 == porta.getSala1(this.sala1)){
+                    porta.setEstado(Porta_Estado.ABERTA);
+                    return true;
+                }
             }
         }
         return false;

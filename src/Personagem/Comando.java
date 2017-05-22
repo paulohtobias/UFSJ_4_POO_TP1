@@ -1,6 +1,7 @@
 package Personagem;
 
 import Item.Item;
+import Mapa.Mapa;
 import Mapa.Porta;
 import Mapa.Sala;
 
@@ -16,7 +17,9 @@ import Mapa.Sala;
  */
 public class Comando {
     
-    static public void getComando(Sala salaAtual, Personagem personagem, String comando){
+    static public void getComando(Mapa mapa, Personagem personagem, String comando){
+        Sala salaAtual = mapa.getSala(personagem.getSalaAtual());
+        
         String[] comandos = comando.trim().split("\\s+", 2);
         
         String acao = comandos[0].toLowerCase();
@@ -32,10 +35,11 @@ public class Comando {
         }
         
         Boolean saida = (personagem instanceof Jogador);
+        System.out.println("Saida: " +saida);
         
         if(acao.equals("pickup")){
             if(sujeito != null){
-                getComando(salaAtual, personagem, "moveto " + sujeito);
+                getComando(mapa, personagem, "moveto " + sujeito);
             }
             Item pegado = personagem.Pegar();
             if(pegado != null){
@@ -44,6 +48,24 @@ public class Comando {
                 System.out.println("Lista cheia.");
             }
             return;
+        }
+        
+        if(acao.equals("lock")){
+            if(personagem.getProximaPorta() == null){
+                if(saida == true){
+                    System.out.println("Nao esta proximo a uma sala");
+                }
+                return;
+            }
+            Sala sala2 = mapa.getSala(personagem.getProximaPorta().getSala2(personagem.getSalaAtual()));
+            Boolean resultado = personagem.Trancar();
+            if(saida == true){
+                if(resultado == true){
+                    System.out.printf("Porta %d-%d trancada\n", salaAtual.getId(), sala2.getId());
+                }else{
+                    System.out.printf("A porta %d-%d nao pode ser trancada\n", salaAtual.getId(), sala2.getId());
+                }
+            }
         }
         
         if(acao.equals("exit")){

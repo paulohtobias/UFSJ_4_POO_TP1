@@ -8,8 +8,10 @@ import Item.Chave;
 import Item.Diamante;
 import Item.Item;
 import Item.Ouro;
+import Item.Pocao;
 import Mapa.Porta;
 import Mapa.Porta.Porta_Estado;
+import Mapa.Sala;
 
 /**
  *
@@ -46,7 +48,8 @@ public class Jogador extends Personagem {
             return false;
         }
         
-        //Verifica se a porta está aberta. Pode ser feito usando o método da classe Personagem.
+        //Verifica se a porta está aberta.
+        //Pode ser feito usando o método da classe Personagem.
         if(super.Sair() == true){
             return true;
         }
@@ -62,13 +65,33 @@ public class Jogador extends Personagem {
         //Portanto, verifica se o jogador tem uma chave para abrí-la.
         int index = 0;
         for(Item item: this.getItens()){
-            if((item instanceof Chave) && ((Chave)item).Usar(this.getProximaPorta()) == true){
-                //O jogador possuía a chave que destranca a porta.
-                //Essa chave será usada.
-                this.getItens().remove(index);
-                return super.Sair();
+            if(item instanceof Chave){
+                if(((Chave)item).Usar(this.getProximaPorta()) == true){
+                    //O jogador possuía a chave que destranca a porta.
+                    //Essa chave será usada.
+                    this.getItens().remove(index);
+                    return super.Sair();
+                }
             }
             index++;
+        }
+        return false;
+    }
+    
+    public Boolean Trancar(){
+        if(this.getProximaPorta() == null){
+            return false;
+        }
+        
+        for(Item item: this.getItens()){
+            if(item instanceof Pocao){
+                if(((Pocao)item).Usar(this.getProximaPorta()) == true){
+                    //Se a poção for usada com sucesso, então ela é removida da
+                    //lista de itens.
+                    this.getItens().remove(item);
+                    return true;
+                }
+            }
         }
         return false;
     }

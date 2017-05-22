@@ -33,12 +33,20 @@ public class Porta {
         this.estado = estado;
     }
 
-    public int getSala1() {
-        return sala1;
+    public int getSala1(int sala_id) {
+        if(this.sala1 == sala_id){
+            return this.sala1;
+        }else{
+            return this.sala2;
+        }
     }
     
-    public int getSala2() {
-        return sala2;
+    public int getSala2(int sala_id) {
+        if(this.sala1 == sala_id){
+            return this.sala2;
+        }else{
+            return this.sala1;
+        }
     }
 
     public Porta_Estado getEstado() {

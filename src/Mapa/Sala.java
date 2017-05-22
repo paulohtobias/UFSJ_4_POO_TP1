@@ -28,70 +28,38 @@ public class Sala {
     private ArrayList<Item> itens;
     private ArrayList<Troll> trolls;
     
-    public Sala(int id, int salaA){
+    public Sala(int id){
         this.id = id;
-        this.portaA = new Porta(this.id, salaA);
         this.itens = new ArrayList<>();
         this.setItens();
+        
+        this.trolls = new ArrayList<>();
         this.setTrolls();
     }
-    public Sala(int id, int salaA, int salaB){
-        this(id, salaA);
-        this.portaB = new Porta(this.id, salaB);
-    }
-    public Sala(int id, int salaA, int salaB, int salaC){
-        this(id, salaA, salaB);
-        this.portaC = new Porta(this.id, salaC);
-    }
-    public Sala(String str){
-        int id_size = str.indexOf(':');
-        this.id = Integer.parseInt(str.substring(0, id_size));
-        
-        this.itens = new ArrayList<Item>();
-        
-        //Criando as portas.
-        int salas_tamI = str.indexOf('(', id_size) + 1;
-        int salas_tamF = str.indexOf(')', salas_tamI);
-        String[] salas = str.substring(salas_tamI, salas_tamF).split(",");
-        
-        this.portaA = new Porta(this.id, Integer.parseInt(salas[0]));
-        try{
-            this.portaB = new Porta(this.id, Integer.parseInt(salas[1]));
-            this.portaC = new Porta(this.id, Integer.parseInt(salas[2]));
-        }catch(Exception e){}
-        
-        //Identificando as portas trancadas.
-        int trancadas_tamI = str.indexOf('(', salas_tamF) + 1;
-        int trancadas_tamF = str.indexOf(')', trancadas_tamI);
-        String[] trancadas = str.substring(trancadas_tamI, trancadas_tamF).split(",");
-        for(String tranca: trancadas){
-            switch(tranca){
-                case "A":
-                    this.portaA.setEstado(Porta_Estado.TRANCADA);
-                    break;
-                case "B":
-                    this.portaB.setEstado(Porta_Estado.TRANCADA);
-                    break;
-                case "C":
-                    this.portaC.setEstado(Porta_Estado.TRANCADA);
-                    break;
-            }
+    public void Conectar(String porta1_id, Sala sala2){
+        switch(porta1_id){
+            case "A":
+                if(sala2.getPorta(this.id) == null){
+                    this.portaA = new Porta(this.id, sala2.id);
+                }else{
+                    this.portaA = sala2.getPorta(this.id);
+                }
+                break;
+            case "B":
+                if(sala2.getPorta(this.id) == null){
+                    this.portaB = new Porta(this.id, sala2.id);
+                }else{
+                    this.portaB = sala2.getPorta(this.id);
+                }
+                break;
+            case "C":
+                if(sala2.getPorta(this.id) == null){
+                    this.portaC = new Porta(this.id, sala2.id);
+                }else{
+                    this.portaC = sala2.getPorta(this.id);
+                }
+                break;
         }
-        
-        //Verificando se há chaves na sala.
-        int chaves_tamI = str.indexOf('(', trancadas_tamF) + 1;
-        int chaves_tamF = str.indexOf(')', chaves_tamI);
-        String[] chaves = str.substring(chaves_tamI, chaves_tamF).split(",");
-        for(String chave: chaves){
-            String[] chave_salas = chave.split("-");
-            int chave_sala1 = Integer.parseInt(chave_salas[0]);
-            int chave_sala2 = Integer.parseInt(chave_salas[1]);
-            this.itens.add(new Chave(chave_sala1, chave_sala2));
-        }
-        
-        //Preenchendo itens e trolls.
-        this.setItens();
-        this.setTrolls();
     }
     
     public int getId(){
@@ -107,6 +75,19 @@ public class Sala {
         }
         return null;
     }
+    
+    public Porta getPortaA() {
+        return this.portaA;
+    }
+
+    public Porta getPortaB() {
+        return this.portaB;
+    }
+
+    public Porta getPortaC() {
+        return this.portaC;
+    }
+    
     public Porta getPorta(String str_porta){
         if(str_porta.equals("a door")){
             return this.portaA;
@@ -116,6 +97,24 @@ public class Sala {
         }
         if(str_porta.equals("c door")){
             return this.portaC;
+        }
+        return null;
+    }
+    public Porta getPorta(int sala2_id){
+        if(this.portaA != null){
+            if(this.portaA.getSala2(this.id) == sala2_id){
+                return this.portaA;
+            }
+        }
+        if(this.portaB != null){
+            if(this.portaB.getSala2(this.id) == sala2_id){
+                return this.portaB;
+            }
+        }
+        if(this.portaC != null){
+            if(this.portaC.getSala2(this.id) == sala2_id){
+                return this.portaC;
+            }
         }
         return null;
     }
@@ -144,14 +143,23 @@ public class Sala {
             }
         }
     }
+    public void addChaves(String chaves_str){
+        int chaves_tamI = chaves_str.indexOf('(') + 1;
+        int chaves_tamF = chaves_str.indexOf(')', chaves_tamI);
+        String[] chaves = chaves_str.substring(chaves_tamI, chaves_tamF).split(",");
+        for(String chave: chaves){
+            String[] chave_salas = chave.split("-");
+            int chave_sala1 = Integer.parseInt(chave_salas[0]);
+            int chave_sala2 = Integer.parseInt(chave_salas[1]);
+            this.itens.add(new Chave(chave_sala1, chave_sala2));
+        }
+    }
     
     public void removerItem(Item item){
         this.itens.remove(item);
     }
     
-    private void setTrolls(){
-        this.trolls = new ArrayList<Troll>();
-        
+    private void setTrolls(){        
         Random rand = new Random();
         int maxTrolls = 2;
         int qtdTrolls = rand.nextInt(maxTrolls + 1);
@@ -165,13 +173,13 @@ public class Sala {
         System.out.printf("Sala %d\n", this.id);
         System.out.println("  Portas:");
         if(this.portaA != null){
-            System.out.print("    Porta A: " + this.portaA.getSala2());
+            System.out.print("    Porta A: " + this.portaA.getSala2(this.id));
         }
         if(this.portaB != null){
-            System.out.print("    Porta B: " + this.portaB.getSala2());
+            System.out.print("    Porta B: " + this.portaB.getSala2(this.id));
         }
         if(this.portaC != null){
-            System.out.print("    Porta C: " + this.portaC.getSala2());
+            System.out.print("    Porta C: " + this.portaC.getSala2(this.id));
         }
         System.out.println();
         

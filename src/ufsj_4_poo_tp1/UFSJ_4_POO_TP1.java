@@ -54,19 +54,17 @@ public class UFSJ_4_POO_TP1 {
         Scanner scan = new Scanner(System.in);
         
         Mapa mapa = new Mapa();
-        Sala salaAtual;
         
         System.out.print("Nome do jogador: ");
         String nome = scan.nextLine();
         Jogador jogador = new Jogador(nome);
 
         String acao;
-        while(true){ //loop principal
+        while(jogador.getSalaAtual() != 0){ //loop principal
             System.out.printf("%s> ", jogador.getId());
             acao = scan.nextLine();
-            salaAtual = mapa.getSala(jogador.getSalaAtual());
 
-            Comando.getComando(salaAtual, jogador, acao);
+            Comando.getComando(mapa, jogador, acao);
         }
     }
 }
