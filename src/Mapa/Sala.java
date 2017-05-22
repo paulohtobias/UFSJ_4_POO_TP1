@@ -8,6 +8,7 @@ package Mapa;
 import Item.Chave;
 import Item.Diamante;
 import Item.Item;
+import Item.Machado;
 import Item.Ouro;
 import Item.Pocao;
 import Mapa.Porta.Porta_Estado;
@@ -76,6 +77,15 @@ public class Sala {
         return null;
     }
     
+    public Troll getTroll(String troll_id){
+        for(Troll troll: this.trolls){
+            if(troll.getId().toLowerCase().equals(troll_id)){
+                return troll;
+            }
+        }
+        return null;
+    }
+    
     public Porta getPortaA() {
         return this.portaA;
     }
@@ -126,7 +136,7 @@ public class Sala {
         int item;
         
         for(int i=0; i<qtdItens; i++){
-            item = rand.nextInt(3);
+            item = rand.nextInt(4);
             switch(item){
                 case 0: //Ouro
                     this.itens.add(new Ouro());
@@ -138,7 +148,7 @@ public class Sala {
                     this.itens.add(new Pocao());
                     break;
                 case 3: //Machado
-                    //this.itens.add(new Machado());
+                    this.itens.add(new Machado());
                     break;
             }
         }
@@ -169,30 +179,36 @@ public class Sala {
         }
     }
     
+    public void removerTroll(Troll troll){
+        this.trolls.remove(troll);
+    }
+    
     public void Listar(){
         System.out.printf("Sala %d\n", this.id);
-        System.out.println("  Portas:");
+        System.out.print("  Portas:");
         if(this.portaA != null){
-            System.out.print("    Porta A: " + this.portaA.getSala2(this.id));
+            System.out.printf(" A: (%d)", this.portaA.getSala2(this.id));
         }
         if(this.portaB != null){
-            System.out.print("    Porta B: " + this.portaB.getSala2(this.id));
+            System.out.printf(" | B: (%d)", this.portaB.getSala2(this.id));
         }
         if(this.portaC != null){
-            System.out.print("    Porta C: " + this.portaC.getSala2(this.id));
+            System.out.printf(" | C: (%d)", this.portaC.getSala2(this.id));
         }
         System.out.println();
         
-        System.out.printf("  Itens: %d\n", this.itens.size());
+        System.out.printf("  %d Iten(s): ", this.itens.size());
         for(Item item : this.itens){
-            System.out.print("    ");
+            System.out.print("<" + item + "> ");
             //System.out.println(item.getClass().getTypeName());
-            System.out.println(item);
+            //System.out.println(item);
         }
+        System.out.println();
         
-        System.out.println("  Trolls:");
+        System.out.printf("  %d Troll(s): ", this.trolls.size());
         for(Troll troll : this.trolls){
-            System.out.println("    " + troll.getId());
+            System.out.println("<" + troll.getId() + "> ");
         }
+        System.out.println();
     }
 }

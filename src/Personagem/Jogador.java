@@ -12,6 +12,7 @@ import Item.Pocao;
 import Mapa.Porta;
 import Mapa.Porta.Porta_Estado;
 import Mapa.Sala;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,27 +20,62 @@ import Mapa.Sala;
  */
 public class Jogador extends Personagem {
     
-    private Ouro ouro;
-    private Diamante diamante;
+    private ArrayList<Ouro> ouro;
+    private ArrayList<Diamante> diamante;
     
     public Jogador(String id) {
         super(id, 5);
         
-        this.ouro = new Ouro();
-        this.diamante = new Diamante();
+        this.ouro = new ArrayList<>();
+        this.diamante = new ArrayList<>();
     }
 
     public int getOuro() {
-        return ouro.getQuantidade();
+        return this.ouro.size();
     }
 
     public int getDiamante() {
-        return diamante.getQuantidade();
+        return this.diamante.size();
+    }
+    
+    public int getMoeda(){
+        return this.getDiamante() + this.getOuro();
+    }
+    
+    public void incrementarOuro(Ouro ouro){
+        this.ouro.add(ouro);
+    }
+    
+    public void incrementarDiamante(Diamante diamante){
+        this.diamante.add(diamante);
     }
     
     public void zerarMoeda(){
-        this.ouro.zerar();
-        this.diamante.zerar();
+        this.ouro.clear();
+        this.diamante.clear();
+    }
+    
+    public void Listar(){
+        //Nome
+        System.out.println("Nome: " + this.getId());
+        
+        //Moeda
+        System.out.printf("  Gold: %d | Diamond: %d | Total: %d\n", this.getOuro(), this.getDiamante(), this.getMoeda());
+        
+        //Sala atual
+        System.out.println("  Sala Atual: " + this.getSalaAtual());
+        
+        //Próximos
+        System.out.println("  Proximo a:");
+        System.out.printf("    Item: %s", (this.getProximoItem() != null)?this.getProximoItem():"N/A");
+        System.out.printf(" | Porta: %s\n", (this.getProximaPorta()!= null)?this.getProximaPorta():"N/A");
+        
+        //Itens
+        System.out.printf("  %d Iten(s): ", this.getItens().size());
+        for(Item item: this.getItens()){
+            System.out.print("<" + item + "> ");
+        }
+        System.out.println();
     }
     
     public Boolean Sair(){

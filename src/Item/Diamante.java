@@ -9,8 +9,8 @@ package Item;
  *
  * @author paulo
  */
-public class Diamante extends Moeda {
+public class Diamante extends Item {
     public String toString(){
-        return String.format("diamond: %d", this.getQuantidade());
+        return "diamond";
     }
 }

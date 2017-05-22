@@ -15,5 +15,9 @@ public class Troll extends Personagem {
         super(id, 1);
     }
     
+    public Boolean equals(Troll troll){
+        return (this.getId().equals(troll.getId()));
+    }
+    
     public void agir(){}
 }

@@ -34,8 +34,8 @@ public class Comando {
             return;
         }
         
-        Boolean saida = (personagem instanceof Jogador);
-        System.out.println("Saida: " +saida);
+        Boolean jogador = (personagem instanceof Jogador);
+        Boolean resultado;
         
         if(acao.equals("pickup")){
             if(sujeito != null){
@@ -44,7 +44,7 @@ public class Comando {
             Item pegado = personagem.Pegar();
             if(pegado != null){
                 salaAtual.removerItem(pegado);
-            }else if(saida == true){
+            }else if(jogador == true){
                 System.out.println("Lista cheia.");
             }
             return;
@@ -52,14 +52,14 @@ public class Comando {
         
         if(acao.equals("lock")){
             if(personagem.getProximaPorta() == null){
-                if(saida == true){
+                if(jogador == true){
                     System.out.println("Nao esta proximo a uma sala");
                 }
                 return;
             }
             Sala sala2 = mapa.getSala(personagem.getProximaPorta().getSala2(personagem.getSalaAtual()));
-            Boolean resultado = personagem.Trancar();
-            if(saida == true){
+            resultado = personagem.Trancar();
+            if(jogador == true){
                 if(resultado == true){
                     System.out.printf("Porta %d-%d trancada\n", salaAtual.getId(), sala2.getId());
                 }else{
@@ -69,8 +69,8 @@ public class Comando {
         }
         
         if(acao.equals("exit")){
-            Boolean resultado = personagem.Sair();
-            if(saida == true){
+            resultado = personagem.Sair();
+            if(jogador == true){
                 if(resultado == true){
                     System.out.println(personagem.getId() + " se moveu para a sala " + personagem.getSalaAtual());
                 }else{
@@ -94,14 +94,14 @@ public class Comando {
             Porta porta = salaAtual.getPorta(sujeito);
             if(item != null){
                 personagem.Mover(item);
-                if(saida == true){
+                if(jogador == true){
                     System.out.println("moveu para " + personagem.getProximoItem().toString());
                 }
                 return;
             }
             if(porta != null){
                 personagem.Mover(porta);
-                if(saida == true){
+                if(jogador == true){
                     System.out.println("moveu para " + sujeito);
                 }
                 return;
@@ -110,12 +110,24 @@ public class Comando {
         }
         
         if(acao.equals("drop")){
-            Boolean resultado = personagem.Largar(sujeito);
-            if(saida == true){
+            resultado = personagem.Largar(sujeito);
+            if(jogador == true){
                 if(resultado == true){
                     System.out.println("Largou " + sujeito);
                 }else{
                     System.out.println("Não foi possível largar " + sujeito);
+                }
+            }
+        }
+        
+        if(acao.equals("throwaxe")){
+            if(jogador == true){
+                Troll troll = salaAtual.getTroll(sujeito);
+                if(troll != null){
+                    salaAtual.removerTroll(troll);
+                    System.out.println(personagem.getId() + " matou " + troll.getId());
+                }else{
+                    System.out.println(sujeito + " não existe.");
                 }
             }
         }
