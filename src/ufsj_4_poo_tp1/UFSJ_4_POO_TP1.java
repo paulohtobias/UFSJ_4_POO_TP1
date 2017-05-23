@@ -21,7 +21,7 @@ public class UFSJ_4_POO_TP1 {
     /**
      * @param args the command line arguments
      */    
-    public static void main1(String[] args) {        
+    public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         
         Mapa mapa = new Mapa("mapa1.txt");
@@ -31,13 +31,16 @@ public class UFSJ_4_POO_TP1 {
             //jogador.Listar();
             System.out.printf("%s> ", mapa.getJogador().getId());
             acao = scan.nextLine();
-
             Comando.getComando(mapa, mapa.getJogador(), acao);
+            
+            for(Troll troll: mapa.getTrolls()){
+                Comando.getComando(mapa, troll, troll.agir(mapa.getSala(troll.getSalaAtual()), mapa.getJogador()));
+            }
         }
         scan.close();
     }
     
-    public static void main(String[] args) {        
+    public static void main2(String[] args) {
         Scanner scan = new Scanner(System.in);
         
         Mapa mapa = new Mapa("mapa1.txt");
@@ -45,7 +48,7 @@ public class UFSJ_4_POO_TP1 {
         /*System.out.print("Nome do Troll: ");
         String nome = scan.nextLine();*/
         Troll troll = mapa.getTroll("Troll 0");
-        troll.setSalaAtual(7);
+        troll.setSalaAtual(12);
 
         String acao;
         while(troll.getSalaAtual() != 0){ //loop principal            

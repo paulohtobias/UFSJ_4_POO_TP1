@@ -105,8 +105,8 @@ public class Jogador extends Personagem {
         
         //Verifica se a porta está aberta.
         //Pode ser feito usando o método da classe Personagem.
-        if(super.Sair() == true){
-            return true;
+        if(this.getProximaPorta().getEstado() == Porta.Porta_Estado.ABERTA){
+            return super.Sair();
         }
         
         //Se a porta estiver fechada, então ela é aberta e a função

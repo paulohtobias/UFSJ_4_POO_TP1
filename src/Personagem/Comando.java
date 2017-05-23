@@ -117,8 +117,9 @@ public class Comando {
         }
         
         if(acao.equals("drop")){
-            resultado = personagem.Largar(sujeito);
-            if(resultado == true){
+            Item item = personagem.Largar(sujeito);
+            if(item != null){
+                salaAtual.addItem(item);
                 System.out.println("Largou " + sujeito);
             }else{
                 System.out.println("Não foi possível largar " + sujeito);

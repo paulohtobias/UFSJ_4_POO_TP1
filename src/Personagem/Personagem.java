@@ -96,26 +96,23 @@ public class Personagem {
         return item;
     }
     
-    public Boolean Largar(String str_item){
-        for(Item i: this.itens){
-            if(str_item.equals(i.toString()) == true){
-                this.itens.remove(i);
-                return true;
-            }
-        }
-        return false;
+    public Item Largar(String str_item){
+        Item item = this.getItem(str_item);
+        this.itens.remove(item);
+        return item;
     }
     
     public Boolean Sair(){
         if(this.getProximaPorta() == null){
             return false;
         }
-        if(this.getProximaPorta().getEstado() == Porta.Porta_Estado.ABERTA){
+        if(this.proximaPorta.getEstado() == Porta.Porta_Estado.ABERTA){
             this.salaAtual = this.getProximaPorta().getSala2(this.salaAtual);
             this.proximaPorta = null;
             this.proximoItem = null;
             return true;
         }
+        this.proximaPorta = null;
         return false;
     }
     

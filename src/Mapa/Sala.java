@@ -74,6 +74,10 @@ public class Sala {
         return null;
     }
     
+    public void addItem(Item item){
+        this.itens.add(item);
+    }
+    
     public Porta getPortaA() {
         return this.portaA;
     }
