@@ -18,7 +18,8 @@ import Mapa.Sala;
 public class Comando {
     
     static public void getComando(Mapa mapa, Personagem personagem, String comando){
-        Sala salaAtual = mapa.getSala(personagem.getSalaAtual());
+        int salaAtual_id = personagem.getSalaAtual();
+        Sala salaAtual = mapa.getSala(salaAtual_id);
         
         String[] comandos = comando.trim().split("\\s+", 2);
         
@@ -30,7 +31,7 @@ public class Comando {
         
         //COMANDOS SIMPLES
         if(acao.equals("view")){
-            salaAtual.Listar();
+            mapa.Listar(salaAtual_id);
             return;
         }
         
@@ -52,19 +53,15 @@ public class Comando {
         
         if(acao.equals("lock")){
             if(personagem.getProximaPorta() == null){
-                if(jogador == true){
-                    System.out.println("Nao esta proximo a uma sala");
-                }
+                System.out.println("Nao esta proximo a uma sala");
                 return;
             }
             Sala sala2 = mapa.getSala(personagem.getProximaPorta().getSala2(personagem.getSalaAtual()));
             resultado = personagem.Trancar();
-            if(jogador == true){
-                if(resultado == true){
-                    System.out.printf("Porta %d-%d trancada\n", salaAtual.getId(), sala2.getId());
-                }else{
-                    System.out.printf("A porta %d-%d nao pode ser trancada\n", salaAtual.getId(), sala2.getId());
-                }
+            if(resultado == true){
+                System.out.printf("Porta %d-%d trancada\n", salaAtual.getId(), sala2.getId());
+            }else{
+                System.out.printf("A porta %d-%d nao pode ser trancada\n", salaAtual.getId(), sala2.getId());
             }
         }
         
@@ -76,6 +73,16 @@ public class Comando {
                 }else{
                     System.out.println("Nao foi possivel sair da sala");
                 }
+                return;
+            }else{
+                //O personagem é um Troll.
+                if(resultado == true){
+                    
+                    System.out.println(personagem.getId() + " se moveu para a sala " + personagem.getSalaAtual());
+                }else{
+                    System.out.println("Nao foi possivel sair da sala");
+                }
+                return;
             }
         }
         
@@ -94,14 +101,14 @@ public class Comando {
             Porta porta = salaAtual.getPorta(sujeito);
             if(item != null){
                 personagem.Mover(item);
-                if(jogador == true){
+                if(jogador == true || true){
                     System.out.println("moveu para " + personagem.getProximoItem().toString());
                 }
                 return;
             }
             if(porta != null){
                 personagem.Mover(porta);
-                if(jogador == true){
+                if(jogador == true || true){
                     System.out.println("moveu para " + sujeito);
                 }
                 return;
@@ -111,23 +118,27 @@ public class Comando {
         
         if(acao.equals("drop")){
             resultado = personagem.Largar(sujeito);
-            if(jogador == true){
-                if(resultado == true){
-                    System.out.println("Largou " + sujeito);
-                }else{
-                    System.out.println("Não foi possível largar " + sujeito);
-                }
+            if(resultado == true){
+                System.out.println("Largou " + sujeito);
+            }else{
+                System.out.println("Não foi possível largar " + sujeito);
             }
         }
         
         if(acao.equals("throwaxe")){
             if(jogador == true){
-                Troll troll = salaAtual.getTroll(sujeito);
+                ((Jogador)personagem).Arremessar();
+                Troll troll = mapa.getTroll( mapa.trollsSala(personagem.getSalaAtual()), sujeito);
                 if(troll != null){
-                    salaAtual.removerTroll(troll);
+                    mapa.removerTroll(troll);
                     System.out.println(personagem.getId() + " matou " + troll.getId());
                 }else{
                     System.out.println(sujeito + " não existe.");
+                }
+            }else{
+                resultado = ((Troll)personagem).Arremessar(mapa.getJogador());
+                if(resultado == true){
+                    System.out.println(personagem.getId() + " atacou você!!\n");
                 }
             }
         }

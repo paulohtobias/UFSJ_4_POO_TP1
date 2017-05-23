@@ -7,15 +7,27 @@ package Mapa;
 
 import Item.Chave;
 import Item.Item;
+import Personagem.Jogador;
 import Personagem.Personagem;
+import Personagem.Troll;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 /**
  *
  * @author paulo
  */
 public class Mapa {
+    //Personagens
+    Jogador jogador = null;
+    ArrayList<Troll> trolls;
+    private final int maxTrolls = 10;
+    private final int qtdTrolls;
+    
+    //Salas
     private Sala[] salas;
     private final int numSalas = 21;
     
@@ -24,6 +36,22 @@ public class Mapa {
     }
     
     public Mapa(String arquivo){
+        //Personagens
+            //Jogador
+            Scanner scan = new Scanner(System.in);
+            System.out.print("Nome do jogador: ");
+            String nome = scan.nextLine();
+            this.jogador = new Jogador(nome);
+            //Trolls
+            this.trolls = new ArrayList<>();
+            Random rand = new Random();
+            qtdTrolls = rand.nextInt(maxTrolls) + 1;
+            for(int i=0; i<qtdTrolls; i++){
+                int salaInicial = rand.nextInt(this.numSalas - 1) + 1;
+                this.trolls.add(new Troll("Troll " + i, salaInicial));
+            }
+        
+        //Salas
         this.salas = new Sala[numSalas];
         for(int i=0; i<numSalas; i++){
             this.salas[i] = new Sala(i);
@@ -83,6 +111,40 @@ public class Mapa {
         }
     }
     
+    public Jogador getJogador(){
+        return this.jogador;
+    }
+
+    public ArrayList<Troll> getTrolls() {
+        return trolls;
+    }
+    
+    public Troll getTroll(String troll_id){
+        return getTroll(this.trolls, troll_id);
+    }
+    
+    public Troll getTroll(ArrayList<Troll> trolls, String troll_id){
+        for(Troll troll: trolls){
+            if(troll.getId().equals(troll_id));
+            return troll;
+        }
+        return null;
+    }
+    
+    public void removerTroll(Troll troll){
+        this.trolls.remove(troll);
+    }
+    
+    public ArrayList<Troll> trollsSala(int sala_id){
+        ArrayList<Troll> trollsSala = new ArrayList<>();
+        for(Troll troll: this.trolls){
+            if(troll.getSalaAtual() == sala_id){
+                trollsSala.add(troll);
+            }
+        }
+        return trollsSala;
+    }
+    
     public Sala[] getSalas(){
         return this.salas;
     }
@@ -94,6 +156,24 @@ public class Mapa {
             }
         }
         return null;
+    }
+    
+    public void Listar(int sala_id){
+        //Informações do Jogador
+        this.getJogador().Listar();
+        System.out.println();
+        
+        //Informações da sala
+        this.getSala(sala_id).Listar();
+        System.out.println();
+        
+        //Listando os trolls que estão na sala
+        ArrayList<Troll> trolls = this.trollsSala(sala_id);
+        System.out.printf("Trolls: %d =>", trolls.size());
+        for(Troll troll: trolls){
+            System.out.print("  " + troll.getId());
+        }
+        System.out.println();
     }
     
     /*public void MoverJogador(){

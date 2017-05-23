@@ -13,12 +13,20 @@ import Personagem.Troll;
  * @author paulo
  */
 public class Machado extends Item {
-    public void Usar (Jogador jogador){
-        if(jogador.getMoeda() > 0){
-            jogador.zerarMoeda();
-        }else{
-            System.out.println(" ----===== GAME OVER AQUI ????? =====-----");
+    public Boolean Usar (Jogador personagem){
+        Item pocao = personagem.getItem("potion");
+        if(pocao != null){
+            personagem.removerItem(pocao);
+            return false;
         }
+        
+        if(personagem.getMoeda() > 0){
+            personagem.zerarMoeda();
+            return false;
+        }
+        
+        System.out.println(" ----===== GAME OVER AQUI ????? =====-----");
+        return true;
     }
     
     public String toString(){

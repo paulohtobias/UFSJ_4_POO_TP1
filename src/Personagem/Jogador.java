@@ -7,6 +7,7 @@ package Personagem;
 import Item.Chave;
 import Item.Diamante;
 import Item.Item;
+import Item.Machado;
 import Item.Ouro;
 import Item.Pocao;
 import Mapa.Porta;
@@ -53,6 +54,24 @@ public class Jogador extends Personagem {
     public void zerarMoeda(){
         this.ouro.clear();
         this.diamante.clear();
+    }
+    
+    public Item Pegar(){
+        if( (this.getItens().size() >= this.getMaxItens()) || (this.getProximoItem() == null) ){
+            return null;
+        }
+        
+        Item item = this.getProximoItem();
+        if(item instanceof Ouro){
+            this.incrementarOuro(new Ouro());
+        }else if(item instanceof Diamante){
+            this.incrementarDiamante(new Diamante());
+        }else{
+            //Em caso de ser item normal, então a função da classe pai é chamada.
+            return super.Pegar();
+        }
+        this.setProximoItem(null);
+        return item;
     }
     
     public void Listar(){
@@ -127,6 +146,16 @@ public class Jogador extends Personagem {
                     this.getItens().remove(item);
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+    
+    public Boolean Arremessar(){
+        for(Item item: this.getItens()){
+            if(item instanceof Machado){
+                this.getItens().remove(item);
+                return true;
             }
         }
         return false;

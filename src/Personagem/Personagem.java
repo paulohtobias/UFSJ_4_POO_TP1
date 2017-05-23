@@ -43,8 +43,25 @@ public class Personagem {
         return this.itens;
     }
     
+    public Item getItem(String item_str){
+        for(Item item: this.getItens()){
+            if(item.toString().startsWith(item_str)){
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    public void removerItem(Item item){
+        this.itens.remove(item);
+    }
+    
     public Item getProximoItem(){
         return this.proximoItem;
+    }
+    
+    public void setProximoItem(Item item){
+        this.proximoItem = item;
     }
     
     public Porta getProximaPorta(){
@@ -53,6 +70,10 @@ public class Personagem {
 
     public int getSalaAtual() {
         return salaAtual;
+    }
+    
+    public void setSalaAtual(int salaAtual){
+        this.salaAtual = salaAtual;
     }
 
     public void Mover(Item item){

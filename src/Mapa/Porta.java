@@ -57,8 +57,8 @@ public class Porta {
         this.estado = estado;
     }
     
-    public String getTipo(){
-        return "door";
+    public String toString(){
+        return "door " + this.sala1 + "-" + this.sala2;
     }
     
 }

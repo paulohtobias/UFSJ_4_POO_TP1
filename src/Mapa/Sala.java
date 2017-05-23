@@ -12,6 +12,7 @@ import Item.Machado;
 import Item.Ouro;
 import Item.Pocao;
 import Mapa.Porta.Porta_Estado;
+import Personagem.Jogador;
 import Personagem.Troll;
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,15 +28,11 @@ public class Sala {
     private Porta portaC = null;
     
     private ArrayList<Item> itens;
-    private ArrayList<Troll> trolls;
     
     public Sala(int id){
         this.id = id;
         this.itens = new ArrayList<>();
         this.setItens();
-        
-        this.trolls = new ArrayList<>();
-        this.setTrolls();
     }
     public void Conectar(String porta1_id, Sala sala2){
         switch(porta1_id){
@@ -72,15 +69,6 @@ public class Sala {
         for(Item item : this.itens){
             if(item.toString().startsWith(str_item)){
                 return item;
-            }
-        }
-        return null;
-    }
-    
-    public Troll getTroll(String troll_id){
-        for(Troll troll: this.trolls){
-            if(troll.getId().toLowerCase().equals(troll_id)){
-                return troll;
             }
         }
         return null;
@@ -129,6 +117,24 @@ public class Sala {
         return null;
     }
     
+    public String getPortaAleatoria(){
+        Random rand = new Random();
+        int cod_porta = rand.nextInt(3);
+        
+        if(cod_porta == 0){
+            return "A door";
+        }
+        
+        if(cod_porta == 1 && this.portaB != null){
+            return "B door";
+        }
+        
+        if(cod_porta == 2 && this.portaC != null){
+            return "C door";
+        }
+        return "A door";
+    }
+    
     private void setItens(){
         Random rand = new Random();
         int maxItens = 5;
@@ -169,20 +175,6 @@ public class Sala {
         this.itens.remove(item);
     }
     
-    private void setTrolls(){        
-        Random rand = new Random();
-        int maxTrolls = 2;
-        int qtdTrolls = rand.nextInt(maxTrolls + 1);
-        
-        for(int i=0; i<qtdTrolls; i++){
-            this.trolls.add(new Troll(String.format("Troll %d", i)));
-        }
-    }
-    
-    public void removerTroll(Troll troll){
-        this.trolls.remove(troll);
-    }
-    
     public void Listar(){
         System.out.printf("Sala %d\n", this.id);
         System.out.print("  Portas:");
@@ -202,12 +194,6 @@ public class Sala {
             System.out.print("<" + item + "> ");
             //System.out.println(item.getClass().getTypeName());
             //System.out.println(item);
-        }
-        System.out.println();
-        
-        System.out.printf("  %d Troll(s): ", this.trolls.size());
-        for(Troll troll : this.trolls){
-            System.out.println("<" + troll.getId() + "> ");
         }
         System.out.println();
     }
