@@ -190,7 +190,7 @@ public class Sala {
         }
         System.out.println();
         
-        System.out.printf("  %d Iten(s): ", this.itens.size());
+        System.out.printf("  %d Item(s): ", this.itens.size());
         for(Item item : this.itens){
             System.out.print("<" + item + "> ");
             //System.out.println(item.getClass().getTypeName());

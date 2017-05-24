@@ -28,11 +28,11 @@ public class UFSJ_4_POO_TP1 {
             //jogador.Listar();
             System.out.printf("%s> ", mapa.getJogador().getNome());
             acao = scan.nextLine();
-            Comando.getComando(mapa, mapa.getJogador(), acao);
+            Boolean acaoValida = Comando.getComando(mapa, mapa.getJogador(), acao);
             
-            //Se o jogador utilizar os comandos view ou help, então o turno não
-            //é contado e os trolls não farão sua jogada.
-            if(! (acao.equals("view") || acao.equals("help")) ){
+            //Se o jogador utilizar os comandos view, help ou logtroll, então o
+            //turno não é contado e os trolls não farão sua jogada.
+            if(acaoValida){
                 //Jogadas dos trolls
                 for(Troll troll: mapa.getTrolls()){
                     Comando.getComando(mapa, troll, troll.gerarComando(mapa.getSala(troll.getSalaAtual()), mapa.getJogador()));

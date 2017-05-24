@@ -220,7 +220,7 @@ public class Jogador extends Personagem {
         System.out.printf(" | Porta: %s\n", (this.getProximaPorta()!= null)?this.getProximaPorta():"N/A");
         
         //Itens
-        System.out.printf("  %d Iten(s): ", this.getItens().size());
+        System.out.printf("  %d Item(s): ", this.getItens().size());
         for(Item item: this.getItens()){
             System.out.print("<" + item + "> ");
         }

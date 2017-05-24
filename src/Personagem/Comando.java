@@ -44,8 +44,10 @@ public class Comando {
      * @param mapa o mapa onde as ações ocorrem
      * @param personagem o personagem (Jogador ou Troll) que fez a ação
      * @param comando o comando a ser processado
+     * @return {@code true} se foi um comando de ação.
+     *         {@code false} se foi um comando view, help, ou logtroll
      */
-    static public void getComando(Mapa mapa, Personagem personagem, String comando){
+    static public Boolean getComando(Mapa mapa, Personagem personagem, String comando){
         //Valores que serão usados algumas vezes na função.
         int salaAtual_id = personagem.getSalaAtual();
         Sala salaAtual = mapa.getSala(salaAtual_id);
@@ -62,7 +64,7 @@ public class Comando {
         //COMANDOS SIMPLES        
         if(acao.equals("view")){
             mapa.Listar(salaAtual_id);
-            return;
+            return false;
         }
         
         //Verifica se o persongaem é jogador ou troll
@@ -85,13 +87,13 @@ public class Comando {
             }else if(log == true){
                 System.out.println("Lista cheia.");
             }
-            return;
+            return true;
         }
         
         if(acao.equals("close")){
             if(personagem.getProximaPorta() == null){
                 System.out.println("Nao esta proximo a uma sala");
-                return;
+                return true;
             }
             Sala sala2 = mapa.getSala(personagem.getProximaPorta().getSala2(personagem.getSalaAtual()));
             resultado = ((Jogador)personagem).FecharPorta();
@@ -100,6 +102,7 @@ public class Comando {
             }else{
                 System.out.printf("A porta %d-%d nao pode ser trancada\n", salaAtual.getId(), sala2.getId());
             }
+            return true;
         }
         
         if(acao.equals("exit")){
@@ -111,12 +114,12 @@ public class Comando {
                     System.out.println(personagem.getNome() + " nao conseguiu sair da sala");
                 }
             }
-            return;
+            return true;
         }
         
         if(acao.equals("help")){
             System.out.println(help);
-            return;
+            return false;
         }
         
         if(acao.equals("quit")){
@@ -125,7 +128,7 @@ public class Comando {
         
         //COMANDOS COMPOSTOS        
         if(objeto == null){
-            return;
+            return false;
         }
         
         if(acao.equals("moveto")){
@@ -137,7 +140,7 @@ public class Comando {
                 if(log == true){
                     System.out.println(personagem.getNome() + " está próximo de " + personagem.getProximoItem());
                 }
-                return;
+                return true;
             }
             if(porta != null){
                 personagem.Mover(porta);
@@ -145,7 +148,7 @@ public class Comando {
                     System.out.println(personagem.getNome() + " está próximo de " + personagem.getProximaPorta());
                 }
             }
-            return;
+            return true;
         }
         
         if(acao.equals("drop")){
@@ -156,6 +159,7 @@ public class Comando {
             }else{
                 System.out.println("Não foi possível largar " + objeto);
             }
+            return true;
         }
         
         if(acao.equals("throwaxe")){
@@ -174,6 +178,7 @@ public class Comando {
                 System.out.println(personagem.getNome() + " atacou você!!\n");
                 resultado = ((Troll)personagem).Arremessar(mapa.getJogador());
             }
+            return true;
         }
         
         if(acao.equals("logtroll")){
@@ -182,7 +187,8 @@ public class Comando {
             }else if(objeto.equals("desliga")){
                 logTroll = false;
             }
-            return;
+            return true;
         }
+        return true;
     }
 }
