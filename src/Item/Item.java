@@ -9,12 +9,4 @@ package Item;
  *
  * @author paulo
  */
-public class Item {
-    public Boolean Usar(){
-        return false;
-    }
-    
-    public String toString(){
-        return "item";
-    }
-}
+public class Item {}

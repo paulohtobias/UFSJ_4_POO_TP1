@@ -5,10 +5,7 @@
  */
 package Mapa;
 
-import Item.Chave;
-import Item.Item;
 import Personagem.Jogador;
-import Personagem.Personagem;
 import Personagem.Troll;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -22,19 +19,49 @@ import java.util.Scanner;
  */
 public class Mapa {
     //Personagens
-    Jogador jogador = null;
-    ArrayList<Troll> trolls;
-    private final int maxTrolls = 10;
-    private final int qtdTrolls;
+    /**
+     * O jogador principal do jogo.
+     */
+    static Jogador jogador;
+    
+    /**
+     * A Lista de trolls do mapa. Varia de 1 a {@code maxTrolls}
+     */
+    private final ArrayList<Troll> trolls;
+    
+    /**
+     * Quantidade máxima de trolls no mapa.
+     */
+    private static int maxTrolls = 10;
+    
+    /**
+     * Quantidade atual de trolls no mapa.
+     */
+    private int qtdTrolls;
     
     //Salas
-    private Sala[] salas;
+    /**
+     * Quantidade de salas no mapa.
+     */
     private final int numSalas = 21;
     
+    /**
+     * Vetor de Salas.
+     */
+    private Sala[] salas;
+    
+    /**
+     * Construtor "default". Se nenhum nome de arquivo foi passado como parâmetro, então
+     * e mapa usado será mapa1.txt
+     */
     public Mapa(){
         this("mapa1.txt");
     }
     
+    /**
+     * Construtor da classe Mapa.
+     * @param arquivo None do arquivo que contém informações sobre as salas
+     */
     public Mapa(String arquivo){
         //Personagens
             //Jogador
@@ -44,9 +71,11 @@ public class Mapa {
             this.jogador = new Jogador(nome);
             //Trolls
             this.trolls = new ArrayList<>();
+            //A quantidade inicial de trolls na sala é definida aleatóriamente.
             Random rand = new Random();
             qtdTrolls = rand.nextInt(maxTrolls) + 1;
             for(int i=0; i<qtdTrolls; i++){
+                //A sala inicial de cada troll é definida aleatóriamente.
                 int salaInicial = rand.nextInt(this.numSalas - 1) + 1;
                 this.trolls.add(new Troll("Troll " + i, salaInicial));
             }
@@ -57,6 +86,7 @@ public class Mapa {
             this.salas[i] = new Sala(i);
         }
         
+        //Lendo o arquivo e configurando as salas.
         FileReader fr = null;
         BufferedReader br = null;
         
@@ -69,8 +99,7 @@ public class Mapa {
             br = new BufferedReader(new FileReader(arquivo));
             
             for(int i=0; i<numSalas && (linha = br.readLine()) != null; i++){
-                
-                //Identificando a primeira sala.
+                //Identificando sala a ser configurada.
                 int id_tam = linha.indexOf(':');
                 int sala1_id = Integer.parseInt(linha.substring(0, id_tam));
                 
@@ -92,13 +121,13 @@ public class Mapa {
                 for(String tranca: trancadas){
                     switch(tranca){
                         case "A":
-                            this.getSala(sala1_id).getPortaA().setEstado(Porta.Porta_Estado.TRANCADA);
+                            this.getSala(sala1_id).getPortaA().Trancar();
                             break;
                         case "B":
-                            this.getSala(sala1_id).getPortaB().setEstado(Porta.Porta_Estado.TRANCADA);
+                            this.getSala(sala1_id).getPortaB().Trancar();
                             break;
                         case "C":
-                            this.getSala(sala1_id).getPortaC().setEstado(Porta.Porta_Estado.TRANCADA);
+                            this.getSala(sala1_id).getPortaC().Trancar();
                             break;
                     }
                 }
@@ -107,34 +136,59 @@ public class Mapa {
                 this.getSala(sala1_id).addChaves(linha.substring(trancadas_tamF));
             }
         }catch(Exception e){
-            e.printStackTrace();
+            System.out.println("Erro (" + e.toString() + ") durante leitura do arquivo.");
+            System.exit(1);
         }
     }
     
+    /**
+     * Retorna o jogador do mapa.
+     * @return jogador
+     */
     public Jogador getJogador(){
         return this.jogador;
     }
 
+    /**
+     * Retorna a lista de trolls do mapa.
+     * @return ArrayList de trolls
+     */
     public ArrayList<Troll> getTrolls() {
         return trolls;
     }
     
-    public Troll getTroll(String troll_id){
-        return getTroll(this.trolls, troll_id);
+    /**
+     * Retorna o troll cujo nome é igual à {@code troll_nome}.
+     * 
+     * @param troll_nome nome a ser buscado na lista de trolls
+     * @return o troll encontrado. Pode ser {@code null}
+     */
+    public Troll getTroll(String troll_nome){
+        return getTroll(this.trolls, troll_nome);
     }
     
-    public Troll getTroll(ArrayList<Troll> trolls, String troll_id){
+    /**
+     * Procura e retorna um troll em {@code trolls} cujo nome é igual à {@code troll_nome}
+     * 
+     * @param trolls lista de trolls a ser procurada. Normalmente é a lista com
+     *               os trolls de uma determinada sala.
+     * @param troll_nome nome a ser buscado em {@code trolls}
+     * @return o troll encontrado. Pode ser {@code null}
+     */
+    public Troll getTroll(ArrayList<Troll> trolls, String troll_nome){
         for(Troll troll: trolls){
-            if(troll.getId().equals(troll_id));
+            if(troll.getNome().equals(troll_nome));
             return troll;
         }
         return null;
     }
     
-    public void removerTroll(Troll troll){
-        this.trolls.remove(troll);
-    }
-    
+    /**
+     * Retorna uma lista com todos os trolls que estão na sala {@code sala_id}.
+     * 
+     * @param sala_id sala a ser listada.
+     * @return uma lista com todos os trolls que estão na sala atualmente.
+     */
     public ArrayList<Troll> trollsSala(int sala_id){
         ArrayList<Troll> trollsSala = new ArrayList<>();
         for(Troll troll: this.trolls){
@@ -145,19 +199,35 @@ public class Mapa {
         return trollsSala;
     }
     
-    public Sala[] getSalas(){
-        return this.salas;
+    /**
+     * Remove um troll da lista de trolls.
+     * 
+     * @param troll troll a ser removido.
+     */
+    public void removerTroll(Troll troll){
+        this.trolls.remove(troll);
+        this.qtdTrolls--;
     }
     
-    public Sala getSala(int salaId){
+    /**
+     * Retorna a sala do vetor de salas cujo id é igual à {@code sala_id}
+     * @param sala_id sala a ser procurada
+     * @return sala correspondente
+     */
+    public Sala getSala(int sala_id){
         for(int i=0; i<this.numSalas; i++){
-            if(this.salas[i].getId() == salaId){
+            if(this.salas[i].getId() == sala_id){
                 return this.salas[i];
             }
         }
         return null;
     }
     
+    /**
+     * Mostra tela o estado atual do jogo. Mostra os dados do jogador, da sala
+     * atual e quais trolls estão nesta sala.
+     * @param sala_id 
+     */
     public void Listar(int sala_id){
         //Informações do Jogador
         this.getJogador().Listar();
@@ -171,14 +241,8 @@ public class Mapa {
         ArrayList<Troll> trolls = this.trollsSala(sala_id);
         System.out.printf("Trolls: %d =>", trolls.size());
         for(Troll troll: trolls){
-            System.out.print("  " + troll.getId());
+            System.out.print("<" + troll.getNome() + ">");
         }
         System.out.println();
     }
-    
-    /*public void MoverJogador(){
-        if(this.jogador.getProximaPorta() != null){
-            this.jogador.Sair();
-        }
-    }*/
 }

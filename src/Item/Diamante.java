@@ -10,6 +10,13 @@ package Item;
  * @author paulo
  */
 public class Diamante extends Item {
+    /**
+     * Retorna o diamante em forma de string.
+     * 
+     * Sobrecarga do método toString.
+     * 
+     * @return "diamond"
+     */
     public String toString(){
         return "diamond";
     }

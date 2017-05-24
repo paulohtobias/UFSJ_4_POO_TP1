@@ -17,47 +17,84 @@ import Mapa.Sala;
  */
 public class Comando {
     
+    /**
+     * Se os comandos dos trolls serão mostrados na tela ou silenciosos
+     */
+    static Boolean logTroll = false;
+    
+    /**
+     * String com uma ajuda de cada comando
+     */
+    static String help = 
+        "Comandos\n\n" +
+        " help              Mostra este menu de ajuda\n" +
+        " view:             Mostra as informações do jogador, e sala\n" +
+        " moveTo OBJETO     Posiciona o personagem próximo à OBJETO\n" +
+        " pickup            Pega o ITEM que está próximo ao personagem\n" +
+        " drop ITEM         Retira ITEM do inventário e o deixa no chão da sala\n" + 
+        " close             Fecha a PORTA que está próxima ao jogador, caso tenha poções no inventário\n" +
+        " exit              Sai da sala caso o jogador esteja próximo a uma porta e esta possa ser/está aberta\n" +
+        " throwAxe TROLL    Joga um machado em TROLL caso este esteja na mesma sala que o jogador\n" +
+        " logTroll VALOR    Liga/Desliga as mensagens dos trolls. VALUE = liga/desliga\n" +
+        " quit              Encerra o jogo\n\n";
+    
+    /**
+     * Recebe o comando de um personagem e processa os eventos.
+     * 
+     * @param mapa o mapa onde as ações ocorrem
+     * @param personagem o personagem (Jogador ou Troll) que fez a ação
+     * @param comando o comando a ser processado
+     */
     static public void getComando(Mapa mapa, Personagem personagem, String comando){
+        //Valores que serão usados algumas vezes na função.
         int salaAtual_id = personagem.getSalaAtual();
         Sala salaAtual = mapa.getSala(salaAtual_id);
         
+        //Divide o comando em duas partes. "ação" e "objeto"
         String[] comandos = comando.trim().split("\\s+", 2);
         
         String acao = comandos[0].toLowerCase();
-        String sujeito = null;
+        String objeto = null;
         if(comandos.length > 1){
-            sujeito = comandos[1].toLowerCase();
+            objeto = comandos[1].toLowerCase();
         }
         
-        //COMANDOS SIMPLES
+        //COMANDOS SIMPLES        
         if(acao.equals("view")){
             mapa.Listar(salaAtual_id);
             return;
         }
         
-        Boolean jogador = (personagem instanceof Jogador);
+        //Verifica se o persongaem é jogador ou troll
+        Boolean log = (personagem instanceof Jogador) || logTroll;
+        //Guarda o resultado de algumas ações
         Boolean resultado;
         
         if(acao.equals("pickup")){
-            if(sujeito != null){
-                getComando(mapa, personagem, "moveto " + sujeito);
+            if(objeto != null){
+                //Se o comando foi dado como pickup item, então o comando
+                //moveTo item é gerado implicitamente.
+                getComando(mapa, personagem, "moveto " + objeto);
             }
             Item pegado = personagem.Pegar();
             if(pegado != null){
                 salaAtual.removerItem(pegado);
-            }else if(jogador == true){
+                if(log == true){
+                    System.out.println(personagem.getNome() + " pegou " + pegado);
+                }
+            }else if(log == true){
                 System.out.println("Lista cheia.");
             }
             return;
         }
         
-        if(acao.equals("lock")){
+        if(acao.equals("close")){
             if(personagem.getProximaPorta() == null){
                 System.out.println("Nao esta proximo a uma sala");
                 return;
             }
             Sala sala2 = mapa.getSala(personagem.getProximaPorta().getSala2(personagem.getSalaAtual()));
-            resultado = personagem.Trancar();
+            resultado = ((Jogador)personagem).FecharPorta();
             if(resultado == true){
                 System.out.printf("Porta %d-%d trancada\n", salaAtual.getId(), sala2.getId());
             }else{
@@ -67,23 +104,19 @@ public class Comando {
         
         if(acao.equals("exit")){
             resultado = personagem.Sair();
-            if(jogador == true){
+            if(log == true){
                 if(resultado == true){
-                    System.out.println(personagem.getId() + " se moveu para a sala " + personagem.getSalaAtual());
+                    System.out.println(personagem.getNome() + " se moveu para a sala " + personagem.getSalaAtual());
                 }else{
-                    System.out.println("Nao foi possivel sair da sala");
+                    System.out.println(personagem.getNome() + " nao conseguiu sair da sala");
                 }
-                return;
-            }else{
-                //O personagem é um Troll.
-                if(resultado == true){
-                    
-                    System.out.println(personagem.getId() + " se moveu para a sala " + personagem.getSalaAtual());
-                }else{
-                    System.out.println("Nao foi possivel sair da sala");
-                }
-                return;
             }
+            return;
+        }
+        
+        if(acao.equals("help")){
+            System.out.println(help);
+            return;
         }
         
         if(acao.equals("quit")){
@@ -91,57 +124,65 @@ public class Comando {
         }
         
         //COMANDOS COMPOSTOS        
-        if(sujeito == null){
+        if(objeto == null){
             return;
         }
         
         if(acao.equals("moveto")){
             
-            Item item = salaAtual.getItem(sujeito);
-            Porta porta = salaAtual.getPorta(sujeito);
+            Item item = salaAtual.getItem(objeto);
+            Porta porta = salaAtual.getPorta(objeto);
             if(item != null){
                 personagem.Mover(item);
-                if(jogador == true || true){
-                    System.out.println("moveu para " + personagem.getProximoItem().toString());
+                if(log == true){
+                    System.out.println(personagem.getNome() + " está próximo de " + personagem.getProximoItem());
                 }
                 return;
             }
             if(porta != null){
                 personagem.Mover(porta);
-                if(jogador == true || true){
-                    System.out.println("moveu para " + sujeito);
+                if(log == true){
+                    System.out.println(personagem.getNome() + " está próximo de " + personagem.getProximaPorta());
                 }
-                return;
             }
             return;
         }
         
         if(acao.equals("drop")){
-            Item item = personagem.Largar(sujeito);
+            Item item = personagem.Largar(objeto);
             if(item != null){
                 salaAtual.addItem(item);
-                System.out.println("Largou " + sujeito);
+                System.out.println("Largou " + objeto);
             }else{
-                System.out.println("Não foi possível largar " + sujeito);
+                System.out.println("Não foi possível largar " + objeto);
             }
         }
         
         if(acao.equals("throwaxe")){
-            if(jogador == true){
+            if(personagem instanceof Jogador){
+                //Busca o troll que foi atacado
+                Troll troll = mapa.getTroll( mapa.trollsSala(personagem.getSalaAtual()), objeto);
+                
                 ((Jogador)personagem).Arremessar();
-                Troll troll = mapa.getTroll( mapa.trollsSala(personagem.getSalaAtual()), sujeito);
                 if(troll != null){
                     mapa.removerTroll(troll);
-                    System.out.println(personagem.getId() + " matou " + troll.getId());
+                    System.out.println(personagem.getNome() + " matou " + troll.getNome());
                 }else{
-                    System.out.println(sujeito + " não existe.");
+                    System.out.println(objeto + " não existe.");
                 }
             }else{
+                System.out.println(personagem.getNome() + " atacou você!!\n");
                 resultado = ((Troll)personagem).Arremessar(mapa.getJogador());
-                if(resultado == true){
-                    System.out.println(personagem.getId() + " atacou você!!\n");
-                }
             }
+        }
+        
+        if(acao.equals("logtroll")){
+            if(objeto.equals("liga")){
+                logTroll = true;
+            }else if(objeto.equals("desliga")){
+                logTroll = false;
+            }
+            return;
         }
     }
 }

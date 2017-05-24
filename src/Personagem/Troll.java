@@ -8,7 +8,6 @@ package Personagem;
 import Item.Item;
 import Item.Machado;
 import Mapa.Sala;
-import java.util.Random;
 
 /**
  *
@@ -16,15 +15,23 @@ import java.util.Random;
  */
 public class Troll extends Personagem {
     
-    public Troll(String id, int salaInicial) {
-        super(id, 1);
+    /**
+     * Construtor da classe troll.
+     * 
+     * @param nome nome identificador do troll
+     * @param salaInicial sala onde o troll começará
+     */
+    public Troll(String nome, int salaInicial) {
+        super(nome, 1);
         this.setSalaAtual(salaInicial);
     }
     
-    public Boolean equals(Troll troll){
-        return (this.getId().equals(troll.getId()));
-    }
-    
+    /**
+     * Verifica se o troll possui e tenta usá-lo em {@code jogador}.
+     * 
+     * @param jogador o alvo do troll
+     * @return {@code true} se o troll tinha machado para arremessar no jogador
+     */
     public Boolean Arremessar(Jogador jogador){
         Item machado = this.getItem("axe");
         if(machado != null){
@@ -35,7 +42,16 @@ public class Troll extends Personagem {
         return false;
     }
     
-    public String agir(Sala salaAtual, Jogador jogador){
+    /**
+     * Pequena IA para os trolls. Gera seus comandos automaticamente baseados
+     * na {@code salaAtual} e no {@code jogador}.
+     * 
+     * @param salaAtual {@code Sala} onde o troll está.
+     * @param jogador jogador inimigo
+     * @return uma string no mesmo formato utilizado pelo jogador que será
+     *         enviada para a função {@code getComando}
+     */
+    public String gerarComando(Sala salaAtual, Jogador jogador){
         //Verificando se o troll já possui um machado.
         Item machado = this.getItem("axe");
         
@@ -53,7 +69,7 @@ public class Troll extends Personagem {
         }else{
             if((this.getSalaAtual() == jogador.getSalaAtual())){
                 //Troll e jogador estão na mesma sala.
-                return "throwAxe " + jogador.getId();
+                return "throwAxe " + jogador.getNome();
             }
         }
             
@@ -63,5 +79,15 @@ public class Troll extends Personagem {
         }else{
             return "moveTo " + salaAtual.getPortaAleatoria();
         }
+    }
+    
+    /**
+     * Método de comparação entre dois trolls. Compara dois trolls pelo nome
+     * 
+     * @param troll troll que terá seu nome comparado
+     * @return {@code true} se os trolls têm nomes iguais
+     */
+    public Boolean equals(Troll troll){
+        return (this.getNome().equals(troll.getNome()));
     }
 }

@@ -5,10 +5,8 @@
  */
 package Personagem;
 
-import Item.Chave;
 import Item.Item;
 import Mapa.Porta;
-import Mapa.Sala;
 import java.util.ArrayList;
 
 /**
@@ -16,23 +14,46 @@ import java.util.ArrayList;
  * @author paulo
  */
 public class Personagem {
-    private String id;
-    private int maxItens;
-    private ArrayList<Item> itens;
-    private Item proximoItem;
-    private Porta proximaPorta;
+    /**
+     * Nome identificador do personagem.
+     */
+    final private String nome;
+    
+    /**
+     * Quantidade máxima de itens que o personagem pode carregar.
+     */
+    final private int maxItens;
+    
+    /**
+     * Lista de itens do usuário.
+     */
+    final private ArrayList<Item> itens;
+    
+    /**
+     * Sala atual do personagem.
+     */
     private int salaAtual = 1;
     
+    /**
+     * {@code Item} que o personagem está próximo.
+     */
+    private Item proximoItem;
+    
+    /**
+     * {@code Porta} que o personagem está próximo.
+     */
+    private Porta proximaPorta;
+    
     public Personagem(String id, int maxItens){
-        this.id = id;
+        this.nome = id;
         this.maxItens = maxItens;
         this.itens = new ArrayList<>();
         this.proximoItem = null;
         this.proximaPorta = null;
     }
 
-    public String getId() {
-        return this.id;
+    public String getNome() {
+        return this.nome;
     }
     
     public int getMaxItens() {
@@ -52,24 +73,16 @@ public class Personagem {
         return null;
     }
     
-    public void removerItem(Item item){
-        this.itens.remove(item);
+    public int getSalaAtual() {
+        return salaAtual;
     }
     
     public Item getProximoItem(){
         return this.proximoItem;
     }
     
-    public void setProximoItem(Item item){
-        this.proximoItem = item;
-    }
-    
     public Porta getProximaPorta(){
         return this.proximaPorta;
-    }
-
-    public int getSalaAtual() {
-        return salaAtual;
     }
     
     public void setSalaAtual(int salaAtual){
@@ -80,6 +93,7 @@ public class Personagem {
         this.proximoItem = item;
         this.proximaPorta = null;
     }
+    
     public void Mover(Porta porta){
         this.proximaPorta = porta;
         this.proximoItem = null;
@@ -96,6 +110,10 @@ public class Personagem {
         return item;
     }
     
+    public void Largar(Item item){
+        this.itens.remove(item);
+    }
+    
     public Item Largar(String str_item){
         Item item = this.getItem(str_item);
         this.itens.remove(item);
@@ -106,21 +124,13 @@ public class Personagem {
         if(this.getProximaPorta() == null){
             return false;
         }
-        if(this.proximaPorta.getEstado() == Porta.Porta_Estado.ABERTA){
+        if(this.proximaPorta.estaAberta()){
             this.salaAtual = this.getProximaPorta().getSala2(this.salaAtual);
             this.proximaPorta = null;
             this.proximoItem = null;
             return true;
         }
         this.proximaPorta = null;
-        return false;
-    }
-    
-    public Boolean Usar(String str_item){
-        return false;
-    }
-    
-    public Boolean Trancar(){
         return false;
     }
 }

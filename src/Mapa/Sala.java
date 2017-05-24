@@ -11,9 +11,6 @@ import Item.Item;
 import Item.Machado;
 import Item.Ouro;
 import Item.Pocao;
-import Mapa.Porta.Porta_Estado;
-import Personagem.Jogador;
-import Personagem.Troll;
 import java.util.ArrayList;
 import java.util.Random;
 
