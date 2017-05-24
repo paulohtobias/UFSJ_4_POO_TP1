@@ -104,10 +104,12 @@ public class Jogador extends Personagem {
         //a lista de moeda correspondente.
         if(item instanceof Ouro){
             this.incrementarOuro();
+            this.proximoItem = null;
             return item;
         }
         if(item instanceof Diamante){
             this.incrementarDiamante();
+            this.proximoItem = null;
             return item;
         }
             

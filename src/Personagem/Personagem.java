@@ -37,12 +37,12 @@ public class Personagem {
     /**
      * {@code Item} que o personagem está próximo.
      */
-    private Item proximoItem;
+    protected Item proximoItem;
     
     /**
      * {@code Porta} que o personagem está próximo.
      */
-    private Porta proximaPorta;
+    protected Porta proximaPorta;
     
     public Personagem(String id, int maxItens){
         this.nome = id;

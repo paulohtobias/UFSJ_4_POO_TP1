@@ -22,7 +22,7 @@ public class Mapa {
     /**
      * O jogador principal do jogo.
      */
-    static Jogador jogador;
+    private final Jogador jogador;
     
     /**
      * A Lista de trolls do mapa. Varia de 1 a {@code maxTrolls}
@@ -214,7 +214,7 @@ public class Mapa {
      * @param sala_id sala a ser procurada
      * @return sala correspondente
      */
-    public Sala getSala(int sala_id){
+    public final Sala getSala(int sala_id){
         for(int i=0; i<this.numSalas; i++){
             if(this.salas[i].getId() == sala_id){
                 return this.salas[i];

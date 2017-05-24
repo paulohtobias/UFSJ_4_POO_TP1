@@ -20,23 +20,31 @@ public class Comando {
     /**
      * Se os comandos dos trolls serão mostrados na tela ou silenciosos
      */
-    static Boolean logTroll = false;
+    static public Boolean logTroll = false;
+    
+    /**
+     * Utiliza o comando view automaticamente ao sair de uma sala
+     */
+    static public Boolean autoView = false;
     
     /**
      * String com uma ajuda de cada comando
      */
     static String help = 
-        "Comandos\n\n" +
+        "COMANDOS\n" +
         " help              Mostra este menu de ajuda\n" +
-        " view:             Mostra as informações do jogador, e sala\n" +
+        " view              Mostra as informações do jogador, e sala\n" +
         " moveTo OBJETO     Posiciona o personagem próximo à OBJETO\n" +
         " pickup            Pega o ITEM que está próximo ao personagem\n" +
         " drop ITEM         Retira ITEM do inventário e o deixa no chão da sala\n" + 
         " close             Fecha a PORTA que está próxima ao jogador, caso tenha poções no inventário\n" +
         " exit              Sai da sala caso o jogador esteja próximo a uma porta e esta possa ser/está aberta\n" +
         " throwAxe TROLL    Joga um machado em TROLL caso este esteja na mesma sala que o jogador\n" +
-        " logTroll VALOR    Liga/Desliga as mensagens dos trolls. VALUE = liga/desliga\n" +
-        " quit              Encerra o jogo\n\n";
+        " quit              Encerra o jogo\n\n" +
+        
+        "OPÇÕES\n" +
+        " logTroll VALOR    Liga/Desliga as mensagens dos trolls. VALOR = liga/desliga\n" +
+        " autoView VALOR    Utiliza o comando view automaticamente ao chegar em uma nova sala. VALOR = liga/desliga\n";
     
     /**
      * Recebe o comando de um personagem e processa os eventos.
@@ -73,7 +81,7 @@ public class Comando {
         Boolean resultado;
         
         if(acao.equals("pickup")){
-            if(objeto != null){
+            if((objeto != null) && personagem.getProximoItem() == null){
                 //Se o comando foi dado como pickup item, então o comando
                 //moveTo item é gerado implicitamente.
                 getComando(mapa, personagem, "moveto " + objeto);
@@ -126,13 +134,15 @@ public class Comando {
             System.exit(0);
         }
         
-        //COMANDOS COMPOSTOS        
+        //COMANDOS COMPOSTOS
+        //A partir daqui todos os comandos devem ser compostos de "ACAO OBJETO"
         if(objeto == null){
-            return false;
+            //Se entrar aqui, então foi dado um comando simples inválido.
+            System.out.println("Comando inválido. digite help para ver a lista de comandos.");
+            return true;
         }
         
         if(acao.equals("moveto")){
-            
             Item item = salaAtual.getItem(objeto);
             Porta porta = salaAtual.getPorta(objeto);
             if(item != null){
@@ -155,9 +165,13 @@ public class Comando {
             Item item = personagem.Largar(objeto);
             if(item != null){
                 salaAtual.addItem(item);
-                System.out.println("Largou " + objeto);
+                System.out.println(personagem.getNome() + " largou " + objeto);
             }else{
-                System.out.println("Não foi possível largar " + objeto);
+                if(personagem instanceof Jogador){
+                    System.out.println("Não foi possível largar " + objeto);
+                }else{
+                    System.out.println(personagem.getNome() + " não possui " + objeto);
+                }
             }
             return true;
         }
@@ -169,6 +183,8 @@ public class Comando {
                 
                 ((Jogador)personagem).Arremessar();
                 if(troll != null){
+                    //Se o troll tiver um machado, então este cairá na sala.
+                    getComando(mapa, troll, "drop axe");
                     mapa.removerTroll(troll);
                     System.out.println(personagem.getNome() + " matou " + troll.getNome());
                 }else{
@@ -187,8 +203,20 @@ public class Comando {
             }else if(objeto.equals("desliga")){
                 logTroll = false;
             }
-            return true;
+            return false;
         }
+        
+        if(acao.equals("autoview")){
+            if(objeto.equals("liga")){
+                autoView = true;
+            }else if(objeto.equals("desliga")){
+                autoView = false;
+            }
+            return false;
+        }
+        
+        //Se chegou até aqui é porque o comando foi inválido.
+        System.out.println("Comando inválido. digite help para ver a lista de comandos.");
         return true;
     }
 }

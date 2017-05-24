@@ -72,7 +72,9 @@ public class Sala {
     }
     
     public void addItem(Item item){
-        this.itens.add(item);
+        if(item != null){
+            this.itens.add(item);
+        }
     }
     
     public Porta getPortaA() {

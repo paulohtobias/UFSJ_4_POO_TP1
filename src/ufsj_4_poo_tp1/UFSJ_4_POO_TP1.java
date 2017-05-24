@@ -21,11 +21,21 @@ public class UFSJ_4_POO_TP1 {
      */    
     public static void main(String[] args) {
         Mapa mapa = new Mapa("mapa1.txt");
+        
+        //Mostrando os comandos na tela
+        Comando.getComando(mapa, mapa.getJogador(), "help");
 
         Scanner scan = new Scanner(System.in);
-        String acao;
-        while(mapa.getJogador().getSalaAtual() != 0){ //loop principal            
-            //jogador.Listar();
+        String acao = "";
+        while(mapa.getJogador().getSalaAtual() != 0){ //loop principal
+            
+            //Testando o autoView
+            if(Comando.autoView == true && acao.equals("exit")){
+                System.out.println("AUTO VIEW");
+                Comando.getComando(mapa, mapa.getJogador(), "view");
+            }
+            
+            //Lendo o comando do jogador
             System.out.printf("%s> ", mapa.getJogador().getNome());
             acao = scan.nextLine();
             Boolean acaoValida = Comando.getComando(mapa, mapa.getJogador(), acao);
