@@ -235,13 +235,12 @@ public class Mapa {
         
         //Informações da sala
         this.getSala(sala_id).Listar();
-        //System.out.println();
         
         //Listando os trolls que estão na sala
         ArrayList<Troll> trolls = this.trollsSala(sala_id);
-        System.out.printf(" %d Trolls: ", trolls.size());
+        System.out.printf("  %d Troll(s): ", trolls.size());
         for(Troll troll: trolls){
-            System.out.print("<" + troll.getNome() + ">");
+            System.out.print("<" + troll.getNome() + "> ");
         }
         System.out.println();
     }
