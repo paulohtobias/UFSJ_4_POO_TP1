@@ -1,0 +1,31 @@
+Paulo Henrique Tobias
+UFSJ - 4º Período
+2017
+POO - TP1
+
+Projeto foi desenvolvido usando a IDE NetBeans.
+
+Para o mapa ser criado, o arquivo mapa1.txt deve estar presente.
+Por precaução, o conteúdo de mapa1.txt será copiado abaixo:
+
+mapa1.txt:
+1: (6,2) (,) (,)
+2: (1,3) (B,) (,)
+3: (2,8) (,) (,)
+4: (0,5) (A,) (0-4,)
+5: (10,4) (B,) (,)
+6: (1,7) (,) (,)
+7: (12,6) (,) (,)
+8: (13,3) (,) (,)
+9: (10) (,) (15-20,)
+10: (9,15,5) (,) (,)
+11: (12,16) (,) (2-3,)
+12: (11,7,13) (C,) (,)
+13: (12,8) (,) (17-18,)
+14: (15,19) (,) (,)
+15: (14,10,20) (C,) (,)
+16: (11,17) (,) (,)
+17: (16,18) (B,) (12-13,)
+18: (19,17) (,) (,)
+19: (14,18) (,) (,)
+20: (15) (,) (5-4,)

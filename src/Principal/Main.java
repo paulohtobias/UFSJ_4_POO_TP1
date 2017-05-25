@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ufsj_4_poo_tp1;
+package Principal;
 
 import Mapa.Mapa;
 import Personagem.Comando;
@@ -14,7 +14,7 @@ import java.util.Scanner;
  *
  * @author paulo
  */
-public class UFSJ_4_POO_TP1 {
+public class Main {
 
     /**
      * @param args the command line arguments
